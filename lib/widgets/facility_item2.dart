@@ -94,7 +94,7 @@ class FacilityItem2 extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                           child: FadeInImage(
                               placeholder: AssetImage(_LOADING_IMAGE),
-                              image: facility.facilityImages.length != 0 ? NetworkImage(/*onlineApi +*/ facility.facilityImages[0].photoPath) : AssetImage('assets/images/facility.jpg'),
+                              image: facility.facilityImages.length != 0 ? NetworkImage(/*localApi + */facility.facilityImages[0].photoPath) : AssetImage('assets/images/facility.jpg'),
                               //facility.facilityImages[0],
                               width: double.infinity,
                               fit: BoxFit.cover)),

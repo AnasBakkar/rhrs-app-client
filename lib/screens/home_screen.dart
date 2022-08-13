@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:rhrs_app/screens/search_screen.dart';
+import 'package:rhrs_app/widgets/facility_item2.dart';
 import '../widgets/travel_card.dart';
+import 'package:rhrs_app/models/facility.dart';
 
-class TravelApp extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
 
   @override
-  _TravelAppState createState() => _TravelAppState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _TravelAppState extends State<TravelApp> {
+class _HomeScreenState extends State<HomeScreen> {
   //here i'm going to add a list of image url that I collected from the internet
   //you can use the image that you want, just copy and paste their Urls here inside the list
   List<String> urls = [
@@ -42,6 +45,7 @@ class _TravelAppState extends State<TravelApp> {
               fontWeight: FontWeight.w600,
             ),
           ),
+          SizedBox(height: 10,),
           Text(
             "Pick your destination",
             style: TextStyle(
@@ -59,7 +63,9 @@ class _TravelAppState extends State<TravelApp> {
             width: MediaQuery.of(context).size.width - 40,
             height: 50,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, SearchScreen.routeName);
+              },
               child: Row(
                 children: [
                   Icon(Icons.search,color: Colors.black,),
@@ -102,19 +108,19 @@ class _TravelAppState extends State<TravelApp> {
               child: Column(
                 children: [
                   TabBar(
-                    indicatorColor: Color(0xFFFE8C68),
+                    indicatorColor: Theme.of(context).primaryColor,//Color(0xFFFE8C68),
                     unselectedLabelColor: Color(0xFF555555),
-                    labelColor: Color(0xFFFE8C68),
+                    labelColor: Theme.of(context).primaryColor,//Color(0xFFFE8C68),
                     labelPadding: EdgeInsets.symmetric(horizontal: 8.0),
                     tabs: [
                       Tab(
-                        text: "Trending",
+                        text: "Resorts",
                       ),
                       Tab(
-                        text: "Promotion",
+                        text: "Hostels",
                       ),
                       Tab(
-                        text: "Favorites",
+                        text: "Chalets",
                       ),
                     ],
                   ),
@@ -128,6 +134,27 @@ class _TravelAppState extends State<TravelApp> {
                         //Now let's create our first tab page
                         Container(
                           child: ListView(
+                            /*scrollDirection: Axis.horizontal,
+                            children: [
+                              FacilityItem2(Facility(
+                                id: '1',
+                                name: 'anas',
+                                type: 'Resort',
+                                cost: 40,
+                                facilityImages: [],
+                                location: 'Damascus',
+                                rate: 5
+                              )),
+                              FacilityItem2(Facility(
+                                  id: '1',
+                                  name: 'anas',
+                                  type: 'Resort',
+                                  cost: 40,
+                                  facilityImages: [],
+                                  location: 'Damascus',
+                                  rate: 5
+                              )),
+                            ],*/
                             scrollDirection: Axis.horizontal,
                             children: [
                               //Now let's add and test our first card

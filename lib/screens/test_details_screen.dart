@@ -1,8 +1,11 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:rhrs_app/components/details%20extension.dart';
 import 'package:rhrs_app/models/facility.dart';
 import 'package:rhrs_app/models/facility_photo.dart';
 import 'package:rhrs_app/widgets/review_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../constants.dart';
@@ -56,6 +59,55 @@ class _NewDetailsScreenState extends State<NewDetailsScreen> {
     return amenities;
   }
 
+  void _showErrorDialog(String error) {
+    showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+              title: Text('An error occured'),
+              content: Text(error),
+              actions: [
+                FlatButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text('Okay'))
+              ],
+            ));
+  }
+
+  Future<bool> reserveFacility(
+      {String facilityId, String startDate, String endDate}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final extractedData =
+        json.decode(prefs.getString('userData')) as Map<String, dynamic>;
+    String authToken = extractedData['token'];
+    String token = "Bearer" + " " + authToken;
+    var url = Uri.parse(localApi + "api/bookings/booking");
+
+    Map<String, String> headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': token
+    };
+
+    try {
+      final response = await http.post(url,
+          headers: headers,
+          body: json.encode({
+            "id_facility": facilityId,
+            "start_date": startDate,
+            "end_date": endDate
+          }));
+      var responseData = await json.decode(response.body);
+      print(responseData);
+      if (responseData['Error'] != null) {
+        return false;
+      }
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   void _showPaymentConfirmation() {
     widget.numberOfBookedDays = widget.selectedBookingDate.endDate
             .difference(widget.selectedBookingDate.startDate)
@@ -84,6 +136,7 @@ class _NewDetailsScreenState extends State<NewDetailsScreen> {
   }
 
   void pickStartReservationDate() {
+    //not used
     showDateRangePicker(
             builder: (ctx, child) {
               return Theme(
@@ -122,9 +175,20 @@ class _NewDetailsScreenState extends State<NewDetailsScreen> {
                   onPressed: () => Navigator.of(context).pop(),
                   child: Text('Cancel')),
               TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    _showPaymentConfirmation();
+                  onPressed: () async {
+                    //Navigator.of(context).pop();
+                    final canBeReserved = await reserveFacility(
+                        facilityId: widget.id,
+                        startDate: widget.selectedBookingDate.startDate
+                            .toString()
+                            .substring(0, 10),
+                        endDate: widget.selectedBookingDate.endDate
+                            .toString()
+                            .substring(0, 10));
+                    Navigator.pop(context);
+                    canBeReserved
+                        ? _showErrorDialog('Reservation done!')
+                        : _showErrorDialog('You don\'t have enough balance!');
                   },
                   child: Text('Ok'))
             ],
@@ -148,8 +212,8 @@ class _NewDetailsScreenState extends State<NewDetailsScreen> {
                         shape: BoxShape.circle)),
                 monthViewSettings: DateRangePickerMonthViewSettings(
                     blackoutDates: [
-                      DateTime(2022, 06, 30),
-                      DateTime(2022, 07, 01)
+                      DateTime(2022, 08, 12),
+                      DateTime(2022, 08, 11)
                     ]),
               ),
             ),
@@ -190,8 +254,13 @@ class _NewDetailsScreenState extends State<NewDetailsScreen> {
       body: Column(children: [
         Expanded(
           child: Stack(children: [
-            PageView(controller: controller, children: [
-              /*Container(
+            PageView(
+              children: [
+                /*.builder(
+              itemCount: widget.facilityImages.length,
+              controller: controller,
+              itemBuilder : (ctx,value)=>*/
+                /*Container(
                 height: screenHeight / 2,
                 width: screenWidth,
                 child: SafeArea(
@@ -203,17 +272,19 @@ class _NewDetailsScreenState extends State<NewDetailsScreen> {
                   ),
                 ),
               ),*/
-              Container(
-                height: screenHeight / 2,
-                width: screenWidth,
-                child: SafeArea(
-                  child: Image(
-                    image: AssetImage('assets/images/facility.jpg'),
-                    fit: BoxFit.cover,
+                Container(
+                  height: screenHeight / 2,
+                  width: screenWidth,
+                  child: SafeArea(
+                    child: Image(
+                      image: AssetImage('assets/images/facility.jpg'),
+                      //NetworkImage(localApi + widget.facilityImages[value].photoPath/*'assets/images/facility.jpg'*/),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-              ),
-            ]),
+              ],
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
@@ -256,6 +327,35 @@ class _NewDetailsScreenState extends State<NewDetailsScreen> {
                 hasFridge: widget.hasFridge,
                 hasCondition: widget.hasCondition,
                 hasCoffee: widget.hasCoffee,
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                child: Divider(),
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              Text(
+                'Reviews',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                child: TextField(
+                  onSubmitted: (value) {},
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      labelText: 'Write a review...'),
+                ),
               ),
               Review(),
               Review(),

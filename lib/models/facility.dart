@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:rhrs_app/constants.dart';
 import 'dart:convert';
 import 'facility_photo.dart';
+import 'review.dart';
 
 enum FacilityType { HOSTEL, RESORT, CHALET }
 
@@ -24,6 +25,7 @@ class Facility extends ChangeNotifier {
   final bool hasTv;
   final type; //temp
   bool isFavorite = false;
+  final List<Review> reviews;
 
   Facility({
     @required this.id,
@@ -43,6 +45,7 @@ class Facility extends ChangeNotifier {
     this.hasTv,
     this.hasCondition,
     this.hasCoffee,
+    this.reviews
   });
 
   void _setFavValue(bool newValue) {
@@ -55,7 +58,7 @@ class Facility extends ChangeNotifier {
     isFavorite = !isFavorite;
     String token = "Bearer" + " " + authToken;
     notifyListeners();
-    var url = Uri.parse(onlineApi + "api/favorite/toggle");
+    var url = Uri.parse(localApi + "api/favorite/toggle");
     //var url = Uri.parse("http://192.168.43.181:8000/api/favorite/toggle");
 
     Map<String, String> headers = {

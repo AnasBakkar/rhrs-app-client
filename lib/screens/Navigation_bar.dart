@@ -23,9 +23,9 @@ class _NavyBarState extends State<NavyBar> {
   void initState() {
     super.initState();
     _pages = [
-      {'page': SearchScreen(), 'title': 'Search'},
+      {'page': HomeScreen()/*SearchScreen()*/, 'title': 'Search'},
       {'page': FavoritesScreen(), 'title': 'Favorites'},
-      {'page' : TravelApp(),'title': 'Bookings'},
+      {'page' : BookingsScreen(),'title': 'Bookings'},
       {'page': ChatsScreen(), 'title': 'Chats'},
       {'page': SettingsScreen(), 'title': 'Settings'},
     ];
@@ -47,9 +47,9 @@ class _NavyBarState extends State<NavyBar> {
         onItemSelected: (index) => setState(() => _selectedPageIndex = index),
         items: <BottomNavyBarItem>[
           BottomNavyBarItem(
-            icon: Icon(Icons.search),
+            icon: Icon(Icons.home),
             title: Text(
-              'search',
+              'Home',
               style: Theme.of(context).textTheme.headline6,
             ),
             activeColor: Theme.of(context).primaryColor,

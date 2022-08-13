@@ -140,7 +140,7 @@ class SettingsScreen extends StatelessWidget {
       body: Column(
         children: <Widget>[
           SizedBox(height: 20),
-          /*FutureBuilder(
+         /* FutureBuilder(
             future: profile.fetchProfileInfo(),
             builder: ((ctx, resultSnapShot) => resultSnapShot.connectionState ==
                     ConnectionState.waiting

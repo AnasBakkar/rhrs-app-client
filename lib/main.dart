@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:rhrs_app/models/auth.dart';
 import 'package:rhrs_app/models/facility.dart';
 import 'package:rhrs_app/models/profile.dart';
+import 'package:rhrs_app/providers/bookings.dart';
 import 'package:rhrs_app/providers/facilities.dart';
 import 'package:rhrs_app/screens/Navigation_bar.dart';
+import 'package:rhrs_app/screens/edit_profile_screen.dart';
 import 'package:rhrs_app/screens/facilities_list.dart';
 import 'package:rhrs_app/screens/facility_details_screen.dart';
 import 'package:rhrs_app/screens/home_screen.dart';
@@ -36,6 +38,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_)=>Facility()),
         ChangeNotifierProvider(create: (_)=>Auth()),
         ChangeNotifierProvider(create: (_)=>Profile()),
+        ChangeNotifierProvider(create: (_)=>Bookings()),
       ],
       child: Consumer<Auth>(
         builder: (ctx, auth, _) => MaterialApp(
@@ -63,7 +66,9 @@ class MyApp extends StatelessWidget {
             Auth.routeName: (ctx) => AuthScreen(),
             NewDetailsScreen.routeName : (ctx) => NewDetailsScreen(),
             ProfileScreen.routeName : (ctx) => ProfileScreen(),
-            TravelApp.routeName : (ctx) => TravelApp(),
+            HomeScreen.routeName : (ctx) => HomeScreen(),
+            EditProfile.routeName : (ctx) => EditProfile(),
+            SearchScreen.routeName : (ctx) => SearchScreen(),
           },
         ),
       ),

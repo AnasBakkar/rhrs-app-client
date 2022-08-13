@@ -41,11 +41,13 @@ class Facilities extends ChangeNotifier {
   List<Facility> savedFacilities = [];
 
   Future<void> fetchSavedFacilities() async {
+
     savedFacilities = [];
-    final API = onlineApi + 'api/favorite/index';
+    final API = localApi + 'api/favorite/index';
     var url = Uri.parse(API);
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    print(prefs.get('token'));
     final extractedData =
         json.decode(prefs.getString('userData')) as Map<String, dynamic>;
     String token = extractedData['token'];
@@ -91,7 +93,7 @@ class Facilities extends ChangeNotifier {
                         FacilityPhoto(
                           photoId: 1,
                           photoPath:
-                              'https://trekbaron.com/wp-content/uploads/2020/07/types-of-resorts-July282020-1-min.jpg',
+                              'https://prod-palace-brand.s3.amazonaws.com/medium_playa_del_carmen_resort_7769c7222e.jpg',
                         )
                       ],
               ))
@@ -104,7 +106,14 @@ class Facilities extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchNextMatched() async {
+  Future<void> fetchNextMatched(
+      {String startDate,
+        String endDate,
+        int minCost,
+        int maxCost,
+        int rate,
+        String propertyType}
+      ) async {
     Map<String, String> headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
@@ -184,10 +193,10 @@ class Facilities extends ChangeNotifier {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
     };
-    final uri = Uri.http('laravelapimk.atwebpages.com',
-        '/public/api/facilities/search', queryParameters);
-    /*final uri = Uri.http(
-        '192.168.43.181:8000', '/api/facilities/search', queryParameters);*/
+    /*final uri = Uri.http('laravelapimk.atwebpages.com',
+        '/public/api/facilities/search', queryParameters);*/
+    final uri = Uri.http(
+        '192.168.43.55:8000'/*'192.168.43.55:8000'*/, '/api/facilities/search', queryParameters);
     final List<Facility> _loadedFacilities = [];
 
     try {

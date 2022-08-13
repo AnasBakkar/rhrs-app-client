@@ -30,7 +30,8 @@ class Profile extends ChangeNotifier {
     final extractedData =
         json.decode(prefs.getString('userData')) as Map<String, dynamic>;
     String token = extractedData['token'];
-    final url = Uri.parse(onlineApi + "api/profile/show");
+    print(token);
+    final url = Uri.parse(localApi + "api/profile/show");
 
     Map<String, String> headers = {
       'Accept': 'application/json',
@@ -41,18 +42,49 @@ class Profile extends ChangeNotifier {
       final response = await http.get(url, headers: headers);
       final profileData = json.decode(response.body);
       print(response.body);
+      print('-----------------------------------------------------');
       myProfile = Profile(
-          id: profileData['profile']['id_user'],
-          gender: profileData['profile']['gender'],
-          phone: profileData['profile']['phone'],
-          age: profileData['profile']['age'],
+          id: profileData['profile']['id_user'] ?? 1,
+          gender: profileData['profile']['gender'] ?? 'Male',
+          phone: profileData['profile']['phone'].toString() ?? '+963937925594',
+          age: profileData['profile']['age'] ?? '21',
           profilePhoto: profileData['profile']['path_photo'],
-          amount: profileData['user']['amount'],
-          email: profileData['user']['email'],
-          userName: profileData['user']['name']);
+          amount: profileData['user']['amount'] ?? 1000,
+          email: profileData['user']['email'] ?? 'anas@gmail.com',
+          userName: profileData['user']['name'] ?? 'anas');
+       //notifyListeners();
     } catch (e) {
       print(e);
+      print('got');
       myProfile = Profile();
+    }
+  }
+
+  Future<void> updateProfile(
+      String newName, String newEmail, String newPhone) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final extractedData =
+        json.decode(prefs.getString('userData')) as Map<String, dynamic>;
+    String token = extractedData['token'];
+    final url = Uri.parse(localApi + "api/profile/update");
+
+    Map<String, String> headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer " + token
+    };
+    try {
+      final response = await http.post(url,
+          headers: headers,
+          body: json.encode({
+            "name": newName,
+            "email": newEmail,
+            "phone": newPhone,
+          }));
+      print(response.body);
+      notifyListeners();
+    } catch (e) {
+      print(e);
     }
   }
 }

@@ -188,7 +188,7 @@ class DetailExtension extends StatelessWidget {
                       name: 'TV',
                       fontSize: 12,
                       size: 45,
-                      iconUrl: 'assets/icons/detail_screen/air-conditioner.svg',
+                      iconUrl: 'assets/icons/detail_screen/tv.svg',
                       radius: 12,
                       color: kBackgroundLightColor)
                   : SizedBox(
@@ -202,7 +202,7 @@ class DetailExtension extends StatelessWidget {
                       name: 'Fridge',
                       fontSize: 12,
                       size: 45,
-                      iconUrl: 'assets/icons/detail_screen/air-conditioner.svg',
+                      iconUrl: 'assets/icons/detail_screen/fridge1.svg',
                       radius: 12,
                       color: kBackgroundLightColor)
                   : SizedBox(

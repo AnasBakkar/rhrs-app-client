@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rhrs_app/screens/edit_profile_screen.dart';
 
 class TopBar extends StatelessWidget {
   const TopBar({
@@ -17,6 +18,15 @@ class TopBar extends StatelessWidget {
             },
             icon: Icon(
               Icons.arrow_back,
+              color: Colors.white,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, EditProfile.routeName);
+            },
+            icon: Icon(
+              Icons.edit,
               color: Colors.white,
             ),
           ),

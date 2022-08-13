@@ -29,8 +29,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> signIn(String email, String password) async {
-    const API =
-        onlineApi +'api/auth/login';
+    const API = localApi + 'api/auth/login';
     /*const API = 'http://192.168.43.181:8000/api/auth/login';*/
     Map<String, String> headers = {
       //'Content-Type': 'multipart/form-data',
@@ -67,13 +66,14 @@ class Auth with ChangeNotifier {
         print(_userId);
         notifyListeners();
       }
-      if(responseData['Error'] != null) {
+      if (responseData['Error'] != null) {
         if (responseData['Error']['email'] != null) {
           throw responseData['Error']['email'].toString();
         } else if (responseData['Error']['password'] != null) {
           throw responseData['Error']['password'].toString();
         }
-      }/*else if (responseData['Error']['password_c'] != null) {
+      }
+      /*else if (responseData['Error']['password_c'] != null) {
         throw responseData['Error']['password_c'].toString();
       }*/
     } catch (error) {
@@ -83,8 +83,7 @@ class Auth with ChangeNotifier {
 
   Future<void> signUp(String email, String password, String confirmPassword,
       String name) async {
-    const API =
-        onlineApi + 'api/auth/register';
+    const API = localApi + 'api/auth/register';
     //const API = 'http://192.168.43.181:8000/api/auth/register';
     Map<String, String> headers = {
       'X-Requested-With': ' XMLHttpRequest ',
@@ -136,9 +135,8 @@ class Auth with ChangeNotifier {
     if (!prefs.containsKey('userData')) {
       return false;
     }
-    final extractedData = json.decode(prefs.getString('userData')) as Map<
-        String,
-        dynamic>;
+    final extractedData =
+        json.decode(prefs.getString('userData')) as Map<String, dynamic>;
     _token = extractedData['token'];
     _userId = extractedData['userId'];
     notifyListeners();
@@ -146,8 +144,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> logout(context) async {
-    const API =
-        onlineApi + 'api/auth/logout';
+    const API = localApi + 'api/auth/logout';
     //var API = 'http://192.168.43.181:8000/api/auth/logout';
     String tokenAuthorization = "Bearer" + " " + _token;
 
@@ -167,7 +164,8 @@ class Auth with ChangeNotifier {
         _userId = null;
         final sharedPrefernces = await SharedPreferences.getInstance();
         sharedPrefernces.clear();
-        Navigator.of(context).pushNamedAndRemoveUntil(Auth.routeName, (route) => false);
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil(Auth.routeName, (route) => false);
       }
     } catch (error) {
       print(error);

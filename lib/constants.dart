@@ -4,7 +4,8 @@ import 'package:flutter_screenutil/screenutil.dart';
 
 ///API
 const onlineApi = "http://laravelapimk.atwebpages.com/public/";
-const localApi = "http://192.168.43.181:8000/";
+const localApi = "http://192.168.43.55:8000/";
+//const localApi = "http://192.168.43.83:8000/";
 
 /// COLOR
 
@@ -14,6 +15,7 @@ const kPrimaryDarkenColor = Color(0xFF2D3142);
 // Background Color
 const kBackgroundColor = Color(0xFFF5FAFF);
 const kBackgroundLightColor = Color(0xFFFFFFFF);
+
 // Box Color
 const kDisabledButtonColor = Color(0xFFD2D2D2);
 const kSizeBoxLightColor = Color(0xFFEBF3FF);

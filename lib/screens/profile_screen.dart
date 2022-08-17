@@ -54,12 +54,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   CardItem(
                                     icon: Icons.person_outline,
                                     fieldName: 'Gender',
-                                    fieldValue: 'male',
+                                    fieldValue: prof.myProfile.gender ??'male',
                                   ),
                                   CardItem(
                                     icon: Icons.hourglass_bottom,
                                     fieldName: 'Age',
-                                    fieldValue: '21',
+                                    fieldValue: prof.myProfile.age ?? '21',
                                   ),
                                 ],
                                 //CardItem(),

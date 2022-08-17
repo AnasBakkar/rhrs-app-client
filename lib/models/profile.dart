@@ -51,7 +51,8 @@ class Profile extends ChangeNotifier {
           profilePhoto: profileData['profile']['path_photo'],
           amount: profileData['user']['amount'] ?? 1000,
           email: profileData['user']['email'] ?? 'anas@gmail.com',
-          userName: profileData['user']['name'] ?? 'anas');
+          userName: profileData['user']['name'] ?? 'anas',
+      );
        //notifyListeners();
     } catch (e) {
       print(e);
@@ -61,7 +62,7 @@ class Profile extends ChangeNotifier {
   }
 
   Future<void> updateProfile(
-      String newName, String newEmail, String newPhone) async {
+      String newName, String newEmail, String newPhone,String newAge, String newGender) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final extractedData =
         json.decode(prefs.getString('userData')) as Map<String, dynamic>;
@@ -80,6 +81,8 @@ class Profile extends ChangeNotifier {
             "name": newName,
             "email": newEmail,
             "phone": newPhone,
+            "age" : newAge,
+            "gender" : newGender,
           }));
       print(response.body);
       notifyListeners();

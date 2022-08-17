@@ -137,21 +137,23 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Search'),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  child: Form(
-                    key: _queryFormKey,
-                    child: Column(
-                      children: [
-                        TextFormField(
+      appBar: AppBar(
+        title: Text('Search'),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                child: Form(
+                  key: _queryFormKey,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 12.0),
+                        child: TextFormField(
                           onChanged: (newValue) {
                             facilityAddress = newValue;
                           },
@@ -161,100 +163,103 @@ class _SearchScreenState extends State<SearchScreen> {
                           keyboardType: TextInputType.text,
                           decoration: InputDecoration(
                             labelText: 'Facility Location',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10)),
                           ),
                         ),
-                        SizedBox(
-                          height: 15.0,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  elevation: 3.0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        'From',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
                       ),
-                      TextButton(
-                        onPressed: pickStartReservationDate,
-                        child: Text(
-                          _reservationStartDate == null
-                              ? 'Choose Start Date'
-                              : DateFormat.yMd()
-                                  .format(_reservationStartDate)
-                                  .toString(),
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).accentColor),
-                        ),
-                      ),
-                      Text(
-                        'to',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      TextButton(
-                        onPressed: pickEndReservationDate,
-                        child: Text(
-                          _reservationEndDate == null
-                              ? 'Choose End Date'
-                              : DateFormat.yMd()
-                                  .format(_reservationEndDate)
-                                  .toString(),
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).accentColor),
-                        ),
+                      SizedBox(
+                        height: 15.0,
                       ),
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 10.0,
+              ),
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
-                Text(
-                  'Cost ',
-                  style: TextStyle(
-                    fontSize: 18.0,
+                elevation: 3.0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      'From',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    TextButton(
+                      onPressed: pickStartReservationDate,
+                      child: Text(
+                        _reservationStartDate == null
+                            ? 'Choose Start Date'
+                            : DateFormat.yMd()
+                                .format(_reservationStartDate)
+                                .toString(),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).accentColor),
+                      ),
+                    ),
+                    Text(
+                      'to',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    TextButton(
+                      onPressed: pickEndReservationDate,
+                      child: Text(
+                        _reservationEndDate == null
+                            ? 'Choose End Date'
+                            : DateFormat.yMd()
+                                .format(_reservationEndDate)
+                                .toString(),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).accentColor),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              Text(
+                'Cost ',
+                style: TextStyle(
+                  fontSize: 18.0,
+                ),
+              ),
+              SliderTheme(
+                data: SliderTheme.of(context).copyWith(
+                  activeTrackColor: Theme.of(context).accentColor,
+                  inactiveTrackColor: Color(0xFF8D8E98),
+                  thumbColor: Theme.of(context).primaryColor,
+                  overlayColor: Color(0x29EB1555),
+                  thumbShape: RoundSliderThumbShape(
+                    enabledThumbRadius: 10.0,
+                  ),
+                  overlayShape: RoundSliderOverlayShape(
+                    overlayRadius: 22.0,
                   ),
                 ),
-                SliderTheme(
-                  data: SliderTheme.of(context).copyWith(
-                    activeTrackColor: Theme.of(context).accentColor,
-                    inactiveTrackColor: Color(0xFF8D8E98),
-                    thumbColor: Theme.of(context).primaryColor,
-                    overlayColor: Color(0x29EB1555),
-                    thumbShape: RoundSliderThumbShape(
-                      enabledThumbRadius: 10.0,
-                    ),
-                    overlayShape: RoundSliderOverlayShape(
-                      overlayRadius: 22.0,
-                    ),
+                child: RangeSlider(
+                  values: _currentRangeValues,
+                  max: 1000,
+                  divisions: 1000,
+                  labels: RangeLabels(
+                    _currentRangeValues.start.round().toString(),
+                    _currentRangeValues.end.round().toString(),
                   ),
-                  child: RangeSlider(
-                    values: _currentRangeValues,
-                    max: 1000,
-                    divisions: 1000,
-                    labels: RangeLabels(
-                      _currentRangeValues.start.round().toString(),
-                      _currentRangeValues.end.round().toString(),
-                    ),
-                    onChanged: (RangeValues values) {
-                      setState(() {
-                        _currentRangeValues = values;
-                      });
-                    },
-                  ),
+                  onChanged: (RangeValues values) {
+                    setState(() {
+                      _currentRangeValues = values;
+                    });
+                  },
                 ),
-                /*SliderTheme(
+              ),
+              /*SliderTheme(
               data: SliderTheme.of(context).copyWith(
                 activeTrackColor: Theme.of(context).accentColor,
                 inactiveTrackColor: Color(0xFF8D8E98),
@@ -278,94 +283,94 @@ class _SearchScreenState extends State<SearchScreen> {
                 },
               ),
             ),*/
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Rate',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      flex: 2,
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Rate',
+                      style: TextStyle(fontSize: 18),
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: Row(
-                        children: [
-                          IconButton(
-                              icon: Icon(FontAwesomeIcons.minus),
-                              onPressed: () {
-                                setState(() {
-                                  if (_rate > 1 && _rate <= 5) _rate--;
-                                });
-                              }),
-                          Text(
-                            '$_rate',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          IconButton(
-                            icon: Icon(FontAwesomeIcons.plus),
+                    flex: 2,
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Row(
+                      children: [
+                        IconButton(
+                            icon: Icon(FontAwesomeIcons.minus),
                             onPressed: () {
                               setState(() {
-                                if (_rate >= 1 && _rate < 5) _rate++;
+                                if (_rate > 1 && _rate <= 5) _rate--;
                               });
-                            },
-                          ),
-                        ],
-                      ),
+                            }),
+                        Text(
+                          '$_rate',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        IconButton(
+                          icon: Icon(FontAwesomeIcons.plus),
+                          onPressed: () {
+                            setState(() {
+                              if (_rate >= 1 && _rate < 5) _rate++;
+                            });
+                          },
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                SizedBox(
-                  height: 12,
-                ),
-                const Text(
-                  'Property Type',
-                  style: TextStyle(
-                    fontSize: 18.0,
                   ),
+                ],
+              ),
+              SizedBox(
+                height: 12,
+              ),
+              const Text(
+                'Property Type',
+                style: TextStyle(
+                  fontSize: 18.0,
                 ),
-                buildCheckboxListTile(
-                    'Chalet', 'Reserve a Chalet to yourself', isChalet),
-                buildCheckboxListTile(
-                    'Resort', 'Reserve a resort to yourself', isResort),
-                buildCheckboxListTile(
-                    'Hostel', 'Reserve a hostel to yourself', isHostel),
-                SizedBox(
-                  height: 10,
-                ),
-                Center(
-                  child: CustomButton(
-                      buttonLabel: 'Search',
-                      onPress: () {
-                        if (facilityAddress == null) {
-                          _showErrorDialog(
-                              "You must enter the facility location!");
-                        } else if (!isChalet && !isResort && !isHostel) {
-                          _showErrorDialog("You must choose a type!");
-                        } else {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => FacilitiesList(
-                                        start: _reservationStartDate
-                                            .toString()
-                                            .substring(0, 10),
-                                        end: _reservationEndDate
-                                            .toString()
-                                            .substring(0, 10),
-                                        rate: _rate,
-                                        facilityType: getType(),
-                                        maxCost:
-                                            _currentRangeValues.end.round(),
-                                        minCost:
-                                            _currentRangeValues.start.round(),
-                                      )));
-                        }
-                      }),
-                ),
-              ],
-            ),
+              ),
+              buildCheckboxListTile(
+                  'Chalet', 'Reserve a Chalet to yourself', isChalet),
+              buildCheckboxListTile(
+                  'Resort', 'Reserve a resort to yourself', isResort),
+              buildCheckboxListTile(
+                  'Hostel', 'Reserve a hostel to yourself', isHostel),
+              SizedBox(
+                height: 10,
+              ),
+              Center(
+                child: CustomButton(
+                    buttonLabel: 'Search',
+                    onPress: () {
+                      if (facilityAddress == null) {
+                        _showErrorDialog(
+                            "You must enter the facility location!");
+                      } else if (!isChalet && !isResort && !isHostel) {
+                        _showErrorDialog("You must choose a type!");
+                      } else {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => FacilitiesList(
+                                      start: _reservationStartDate
+                                          .toString()
+                                          .substring(0, 10),
+                                      end: _reservationEndDate
+                                          .toString()
+                                          .substring(0, 10),
+                                      rate: _rate,
+                                      facilityType: getType(),
+                                      maxCost: _currentRangeValues.end.round(),
+                                      minCost:
+                                          _currentRangeValues.start.round(),
+                                    )));
+                      }
+                    }),
+              ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

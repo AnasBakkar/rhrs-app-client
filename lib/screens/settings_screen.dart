@@ -6,7 +6,7 @@ import 'package:rhrs_app/models/profile.dart';
 import 'package:rhrs_app/screens/profile_screen.dart';
 import 'package:rhrs_app/widgets/settings_list_item.dart';
 import 'package:provider/provider.dart';
-
+import 'notification_list.dart';
 import '../constants.dart';
 
 final kTitleTextStyle = TextStyle(
@@ -217,6 +217,9 @@ class SettingsScreen extends StatelessWidget {
                 SettingsListItem(
                   icon: Icons.notifications_none,
                   text: 'Notifications',
+                  onPress: (){
+                    Navigator.pushNamed(context, NotificationsList.routeName);
+                  },
                 ),
                 SettingsListItem(
                   icon: LineAwesomeIcons.question_circle,
@@ -226,10 +229,10 @@ class SettingsScreen extends StatelessWidget {
                   icon: LineAwesomeIcons.cog,
                   text: 'Settings',
                 ),
-                SettingsListItem(
+                /*SettingsListItem(
                   icon: LineAwesomeIcons.user_plus,
                   text: 'Invite a Friend',
-                ),
+                ),*/
                 SettingsListItem(
                   icon: LineAwesomeIcons.alternate_sign_out,
                   text: 'Logout',

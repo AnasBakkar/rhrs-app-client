@@ -92,7 +92,7 @@ class _EditProfileState extends State<EditProfile> {
                       print(email);
                       print("phone");
                       print(phone);
-                      await Provider.of<Profile>(context,listen: false).updateProfile(name, email, phone).then((value) => Navigator.pop(context));
+                      await Provider.of<Profile>(context,listen: false).updateProfile(name, email, phone,age,gender).then((value) => Navigator.pop(context));
                     },
                   )
                 ],

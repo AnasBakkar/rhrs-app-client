@@ -1,6 +1,26 @@
 import 'package:flutter/material.dart';
 import 'constants.dart';
 
+
+final TextStyle bodyTextMessage =
+TextStyle(fontSize: 13, letterSpacing: 1.5, fontWeight: FontWeight.w600);
+
+final TextStyle bodyTextTime = TextStyle(
+    fontStyle: FontStyle.italic,
+    color: Color(0xffAEABC9),
+    fontSize: 11,
+    fontWeight: FontWeight.bold,
+    letterSpacing: 1,
+);
+
+final TextStyle chatSenderName = TextStyle(
+    color: Colors.white,
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
+    letterSpacing: 1.5,
+);
+
+
 final themeCustomed = ThemeData(
     //accentColor: Colors.blueAccent,
     primaryColor: kPrimaryColor,

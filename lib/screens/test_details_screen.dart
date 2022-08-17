@@ -1,12 +1,20 @@
 import 'dart:convert';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rhrs_app/components/details%20extension.dart';
 import 'package:rhrs_app/models/facility.dart';
 import 'package:rhrs_app/models/facility_photo.dart';
+import 'package:rhrs_app/models/review.dart';
+import 'package:rhrs_app/providers/facilities.dart';
+import 'package:rhrs_app/providers/pusherController.dart';
 import 'package:rhrs_app/widgets/review_widget.dart';
+import 'package:rhrs_app/widgets/travel_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:http/http.dart' as http;
+import '../providers/Reviews.dart';
 
 import '../constants.dart';
 
@@ -26,11 +34,17 @@ class NewDetailsScreen extends StatefulWidget {
   final bool hasFridge;
   final bool hasTv;
   String id;
+  final String ownerId;
   PickerDateRange selectedBookingDate;
   int numberOfBookedDays = 0;
+  String reportContent;
+  String messageContent;
+  int userRate = 1;
+  String userReview;
 
   NewDetailsScreen(
       {this.id,
+      this.ownerId,
       this.rate,
       this.facilityType,
       this.description,
@@ -49,6 +63,8 @@ class NewDetailsScreen extends StatefulWidget {
 }
 
 class _NewDetailsScreenState extends State<NewDetailsScreen> {
+  bool isLoading = false;
+
   List<String> getAmenities() {
     List<String> amenities = [];
     if (widget.hasFridge) amenities.add('Fridge');
@@ -58,6 +74,169 @@ class _NewDetailsScreenState extends State<NewDetailsScreen> {
     if (widget.hasWifi) amenities.add('Wifi');
     return amenities;
   }
+
+  bool isInit = true;
+  List<String> dates = [];
+  Reviews reviews;
+  Facility facility;
+
+  @override
+  void initState() {
+    Future.delayed(Duration(milliseconds: 300)).then((value) async {
+      dates = await Provider.of<Facilities>(context, listen: false)
+          .getUnavailableDates(widget.id);
+      print('dates : $dates');
+      final review = Provider.of<Reviews>(context, listen: false);
+      controller.addListener(() {
+        if (controller.position.maxScrollExtent == controller.offset) {
+          if (review.url_next_page != null) {
+            review.fetchNextReview().then((value) {});
+          }
+        }
+      });
+    });
+
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (isInit) {
+      final facilityId = widget.id;
+      /*facility =
+          Provider.of<Facilities>(context, listen: false).findById(facilityId);*/
+      reviews = Provider.of<Reviews>(context, listen: false);
+      reviews.setChannelName("User.Comment.Facility.${widget.id}");
+      reviews.setEventName("CommentEvent");
+      reviews.subscribePusher();
+    }
+    isInit = false;
+
+    super.didChangeDependencies();
+  }
+
+  Future<String> submitReport() async {
+    print('submit');
+    /*setState(() {
+      isLoading = true;
+    });*/
+    final API = localApi + 'api/report/add';
+    var url = Uri.parse(API);
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    print(prefs.get('token'));
+    final extractedData =
+        json.decode(prefs.getString('userData')) as Map<String, dynamic>;
+    String token = extractedData['token'];
+
+    Map<String, String> headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer" + " " + token
+    };
+
+    try {
+      print('before');
+      final response = await http.post(url,
+          headers: headers,
+          body: json.encode(
+              {"id_facility": widget.id, "report": widget.reportContent}));
+      print('after');
+      print(response.body.contains('Error'));
+      //final extractedData = await json.decode(response.body);
+      print(extractedData);
+      setState(() {
+        isLoading = false;
+      });
+      if (response.body.contains('Error')) {
+        return 'An error occured when reporting';
+      } else {
+        return 'reporting done successfully';
+      }
+    } catch (e) {
+      print('report $e');
+      /*setState(() {
+        isLoading = false;
+      });*/
+    }
+  }
+
+  Future<void> openChatDialog() => showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            title: Text('Send a message to the owner'),
+            content: TextField(
+              maxLines: 4,
+              onSubmitted: (value) {
+                widget.messageContent = value;
+                print('report : ${widget.reportContent}');
+              },
+              decoration: InputDecoration(
+                hintText: 'Enter your message...',
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5.0))),
+              ),
+              keyboardType: TextInputType.text,
+            ),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  print('owner id                :         ${widget.ownerId}');
+                  Provider.of<PusherController>(context, listen: false)
+                      .sendMessage(widget.messageContent, widget.ownerId);
+                  /*String result = await submitReport();
+              Navigator.pop(context);
+              _showErrorDialog(result);*/
+                },
+                child: isLoading
+                    ? CircularProgressIndicator()
+                    : Text(
+                        'Send',
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 16,
+                        ),
+                      ),
+              ),
+            ],
+          ));
+
+  Future<void> openReportDialog() => showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            title: Text('Report to admin'),
+            content: TextField(
+              maxLines: 4,
+              onSubmitted: (value) {
+                widget.reportContent = value;
+                print('report : ${widget.reportContent}');
+              },
+              decoration: InputDecoration(
+                hintText: 'Enter the reason of reporting...',
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5.0))),
+              ),
+              keyboardType: TextInputType.text,
+            ),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  String result = await submitReport();
+                  Navigator.pop(context);
+                  _showErrorDialog(result ?? 'failed reporting');
+                },
+                child: isLoading
+                    ? CircularProgressIndicator()
+                    : Text(
+                        'Submit',
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 16,
+                        ),
+                      ),
+              ),
+            ],
+          ));
 
   void _showErrorDialog(String error) {
     showDialog(
@@ -135,6 +314,20 @@ class _NewDetailsScreenState extends State<NewDetailsScreen> {
     print(widget.selectedBookingDate);
   }
 
+  /*List<DateTime> getDaysInBetween() {
+    List<DateTime> days = [];
+    for (int i = 0;
+        i <=
+            DateTime.parse(dates[0])
+                .difference(DateTime.parse(dates[1]))
+                .inDays;
+        i++) {
+      days.add(DateTime.parse(dates[0]).add(Duration(days: i)));
+    }
+    print(days);
+    return days;
+  }*/
+
   void pickStartReservationDate() {
     //not used
     showDateRangePicker(
@@ -188,7 +381,7 @@ class _NewDetailsScreenState extends State<NewDetailsScreen> {
                     Navigator.pop(context);
                     canBeReserved
                         ? _showErrorDialog('Reservation done!')
-                        : _showErrorDialog('You don\'t have enough balance!');
+                        : _showErrorDialog('An error occured when reserving the facility');
                   },
                   child: Text('Ok'))
             ],
@@ -210,11 +403,14 @@ class _NewDetailsScreenState extends State<NewDetailsScreen> {
                         color: Colors.grey,
                         border: Border.all(width: 1),
                         shape: BoxShape.circle)),
-                monthViewSettings: DateRangePickerMonthViewSettings(
-                    blackoutDates: [
-                      DateTime(2022, 08, 12),
-                      DateTime(2022, 08, 11)
-                    ]),
+                /*monthViewSettings: DateRangePickerMonthViewSettings(
+                    blackoutDates:
+                        getDaysInBetween() /* [
+                      getDaysInBetween()
+                      /*DateTime(2022, 08, 12),
+                      DateTime(2022, 08, 11)*/
+                    ]*/
+                    ),*/
               ),
             ),
           );
@@ -230,6 +426,7 @@ class _NewDetailsScreenState extends State<NewDetailsScreen> {
   }
 
   final controller = PageController();
+  final _controller = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -299,13 +496,33 @@ class _NewDetailsScreenState extends State<NewDetailsScreen> {
                             onPressed: () {
                               Navigator.pop(context);
                             })),
-                    SafeArea(
-                        child: IconButton(
-                            icon: Icon(
-                              Icons.chat,
-                              color: Colors.white,
-                            ),
-                            onPressed: () {})),
+                    Row(
+                      children: [
+                        SafeArea(
+                          child: IconButton(
+                              icon: Icon(
+                                Icons.report,
+                                color: Colors.white,
+                              ),
+                              onPressed: () async {
+                                await openReportDialog();
+                              }),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        SafeArea(
+                          child: IconButton(
+                              icon: Icon(
+                                Icons.chat,
+                                color: Colors.white,
+                              ),
+                              onPressed: () async {
+                                await openChatDialog();
+                              }),
+                        ),
+                      ],
+                    )
                   ]),
             ),
           ]),
@@ -346,22 +563,133 @@ class _NewDetailsScreenState extends State<NewDetailsScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              SizedBox(
+                height: 8,
+              ),
+              RatingBar.builder(
+                initialRating: 1,
+                minRating: 1,
+                direction: Axis.horizontal,
+                allowHalfRating: false,
+                itemCount: 5,
+                itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                itemBuilder: (context, _) => Icon(
+                  Icons.star,
+                  color: Colors.amber,
+                  size: 30,
+                ),
+                onRatingUpdate: (rating) async {
+                  widget.userRate = rating.round();
+                  String result =
+                      await Provider.of<ReviewModel>(context, listen: false)
+                          .addRate(widget.id, widget.userRate);
+                  if (result.contains('evaluation')) {
+                    _showErrorDialog(
+                        'you need to reserve this facility before you rate it');
+                  }
+                  print(result);
+                },
+              ),
+              /*SliderTheme(
+                data: SliderTheme.of(context).copyWith(
+                  activeTrackColor: Theme.of(context).accentColor,
+                  inactiveTrackColor: Color(0xFF8D8E98),
+                  thumbColor: Theme.of(context).primaryColor,
+                  overlayColor: Color(0x29EB1555),
+                  thumbShape: RoundSliderThumbShape(
+                    enabledThumbRadius: 10.0,
+                  ),
+                  overlayShape: RoundSliderOverlayShape(
+                    overlayRadius: 22.0,
+                  ),
+                ),
+                child: Slider(
+                  value: widget.userRate.toDouble(),
+                  divisions: 5,
+                  min: 0,
+                  max: 5,
+                  onChanged: (double value) {
+                    setState(() {
+                      widget.userRate = value.round();
+                    });
+                  },
+                ),
+              ),*/
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                 child: TextField(
-                  onSubmitted: (value) {},
+                  maxLines: 3,
+                  keyboardType: TextInputType.text,
+                  onSubmitted: (value) async {
+                    widget.userReview = value;
+                    String result =
+                        await Provider.of<ReviewModel>(context, listen: false)
+                            .addReview(widget.id, widget.userReview);
+                    if (result.contains('Dont make Rating')) {
+                      _showErrorDialog(
+                          'before you write a review you need to rate the facility first');
+                    }
+                    print(result);
+                    print(widget.userReview);
+                  },
                   decoration: InputDecoration(
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8)),
                       labelText: 'Write a review...'),
                 ),
               ),
+              FutureBuilder(
+                  future: Provider.of<Reviews>(context, listen: false)
+                      .fetchReview(widget.id),
+                  builder: ((ctx, resultSnapShot) => resultSnapShot
+                              .connectionState ==
+                          ConnectionState.waiting
+                      ? const Center(child: CircularProgressIndicator())
+                      : Consumer<Reviews>(
+                          builder: (ctx, fetchedReviews, child) =>
+                              ListView.builder(
+                                shrinkWrap: true,
+                                physics: const ScrollPhysics(),
+                                controller: _controller,
+                                itemBuilder: (context, index) {
+                                  if (index < fetchedReviews.review.length) {
+                                    return Review(
+                                      time: fetchedReviews.review[index].time,
+                                      id: fetchedReviews.review[index].id,
+                                      name: fetchedReviews.review[index].name,
+                                      rate: fetchedReviews.review[index].rate,
+                                      comment:
+                                          fetchedReviews.review[index].comment,
+                                      id_facility: fetchedReviews
+                                          .review[index].id_facility,
+                                      id_user:
+                                          fetchedReviews.review[index].id_user,
+                                      path_photo: fetchedReviews
+                                          .review[index].path_photo,
+                                    );
+                                  } else {
+                                    if (fetchedReviews.url_next_page != null) {
+                                      return const Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 32.0),
+                                        child: Center(
+                                            child: CircularProgressIndicator()),
+                                      );
+                                    }
+                                    return const SizedBox(
+                                      height: 0,
+                                    );
+                                  }
+                                },
+                                itemCount: fetchedReviews.review.length + 1,
+                              )))),
+
+              /* Review(),
               Review(),
               Review(),
               Review(),
-              Review(),
-              Review(),
+              Review(),*/
             ]),
           ),
         ),

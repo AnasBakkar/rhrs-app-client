@@ -5,7 +5,8 @@ import 'package:flutter_screenutil/screenutil.dart';
 ///API
 const onlineApi = "http://laravelapimk.atwebpages.com/public/";
 const localApi = "http://192.168.43.55:8000/";
-//const localApi = "http://192.168.43.83:8000/";
+const apiWithParams = '192.168.43.55:8000';
+//const localApi = "http://192.168.137.29:8000/";
 
 /// COLOR
 

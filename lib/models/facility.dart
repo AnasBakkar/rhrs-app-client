@@ -9,6 +9,7 @@ enum FacilityType { HOSTEL, RESORT, CHALET }
 
 class Facility extends ChangeNotifier {
   final String id;
+  final String ownerId;
   final String name;
   final String location; //
   final String description;
@@ -25,7 +26,7 @@ class Facility extends ChangeNotifier {
   final bool hasTv;
   final type; //temp
   bool isFavorite = false;
-  final List<Review> reviews;
+  final List<ReviewModel> reviews;
 
   Facility({
     @required this.id,
@@ -38,6 +39,7 @@ class Facility extends ChangeNotifier {
     @required this.numberOfRooms,
     @required this.facilityType,
     @required this.rate,
+    @required this.ownerId,
     this.isFavorite = false,
     this.type,
     this.hasWifi,

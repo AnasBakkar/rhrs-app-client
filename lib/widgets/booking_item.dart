@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:rhrs_app/models/booking.dart';
+import 'package:rhrs_app/models/facility.dart';
 import 'package:rhrs_app/providers/bookings.dart';
+import 'package:rhrs_app/providers/facilities.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants.dart';
+import '../screens/test_details_screen.dart';
 
 class BookingCard extends StatefulWidget {
   final Booking booking;
@@ -22,7 +25,7 @@ class BookingCard extends StatefulWidget {
 class _BookingCardState extends State<BookingCard> {
   bool _expanded = false;
 
-  Future<bool> cancelReservation(String bookingId,String facilityId) async {
+  Future<bool> cancelReservation(String bookingId, String facilityId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final extractedData =
     json.decode(prefs.getString('userData')) as Map<String, dynamic>;
@@ -43,12 +46,12 @@ class _BookingCardState extends State<BookingCard> {
       );
       var responseData = await json.decode(response.body);
       print(responseData);
-      if(responseData['Error'] != null){
+      if (responseData['Error'] != null) {
         return false;
       }
       return true;
     }
-    catch(e){
+    catch (e) {
       print(e);
       return false;
     }
@@ -56,12 +59,19 @@ class _BookingCardState extends State<BookingCard> {
 
   @override
   Widget build(BuildContext context) {
-    final _bodTitleTextStyle = Theme.of(context)
+    final _bodTitleTextStyle = Theme
+        .of(context)
         .textTheme
         .headline5
         .copyWith(color: kPrimaryDarkenColor, fontWeight: FontWeight.w500);
-    final _bodBody2TextStyle = Theme.of(context).textTheme.bodyText2;
-    final _bodBody1TextStyle = Theme.of(context).textTheme.bodyText1;
+    final _bodBody2TextStyle = Theme
+        .of(context)
+        .textTheme
+        .bodyText2;
+    final _bodBody1TextStyle = Theme
+        .of(context)
+        .textTheme
+        .bodyText1;
 
     return Card(
       elevation: 8.0,
@@ -77,7 +87,7 @@ class _BookingCardState extends State<BookingCard> {
                   offset: Offset(0, 10), blurRadius: 30, color: kShadowColor)
             ]),
         child: Column(
-            //mainAxisSize: MainAxisSize.min,
+          //mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
                 padding: EdgeInsets.all(12),
@@ -90,7 +100,7 @@ class _BookingCardState extends State<BookingCard> {
                           placeholder: AssetImage(BookingCard._LOADING_IMAGE),
                           image: widget.booking.facilityPhotoPath != null
                               ? NetworkImage(
-                                  localApi + widget.booking.facilityPhotoPath)
+                              localApi + widget.booking.facilityPhotoPath)
                               : AssetImage('assets/images/facility.jpg'),
                           //facility.facilityImages[0],
                           width: double.infinity,
@@ -131,16 +141,18 @@ class _BookingCardState extends State<BookingCard> {
                                     fontSize: 14, color: Colors.green),
                               ),
                               Text(
-                                '${widget.booking.startDate.toString().substring(0, 10)} ',
+                                '${widget.booking.startDate.toString()
+                                    .substring(0, 10)} ',
                                 style: TextStyle(fontSize: 14.0),
                               ),
                               Text(
                                 'To ',
                                 style:
-                                    TextStyle(fontSize: 14, color: Colors.red),
+                                TextStyle(fontSize: 14, color: Colors.red),
                               ),
                               Text(
-                                '${widget.booking.endDate.toString().substring(0, 10)}',
+                                '${widget.booking.endDate.toString().substring(
+                                    0, 10)}',
                                 style: TextStyle(fontSize: 14.0),
                               ),
                             ],
@@ -150,7 +162,11 @@ class _BookingCardState extends State<BookingCard> {
                             style: TextStyle(fontSize: 14.0),
                           ),
                           Text(
-                            'number of booked days ${DateTime.parse(widget.booking.endDate).difference(DateTime.parse(widget.booking.startDate)).inDays}',
+                            'number of booked days ${DateTime
+                                .parse(widget.booking.endDate)
+                                .difference(
+                                DateTime.parse(widget.booking.startDate))
+                                .inDays}',
                             style: TextStyle(fontSize: 14.0),
                           ),
                           SizedBox(
@@ -160,21 +176,55 @@ class _BookingCardState extends State<BookingCard> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () async {
+                                  Facility fetched = await Provider.of<
+                                      Facilities>(context,listen: false).getFacilityDetails(
+                                      widget.booking.facilityId.toString());
+                                  if (fetched != null) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) =>
+                                                NewDetailsScreen(
+                                                  id: fetched.id,
+                                                  ownerId: fetched.ownerId,
+                                                  facilityName: fetched.name,
+                                                  cost: fetched.cost,
+                                                  rate: fetched.rate,
+                                                  description: fetched.description,
+                                                  facilityImages: fetched.facilityImages,
+                                                  facilityType: fetched.type,
+                                                  //getFacilityType(facility.facilityType),
+                                                  location: fetched.location,
+                                                  hasCoffee: fetched.hasCoffee,
+                                                  hasCondition: fetched.hasCondition,
+                                                  hasFridge: fetched.hasFridge,
+                                                  hasTv: fetched.hasTv,
+                                                  hasWifi: fetched.hasWifi,
+                                                )
+                                        )
+                                    );
+                                  }
+                                },
                                 child: Text('Details'),
                                 style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(6.0)),
-                                  primary: Theme.of(context).primaryColor,
+                                  primary: Theme
+                                      .of(context)
+                                      .primaryColor,
                                 ),
                               ),
                               ElevatedButton(
-                                onPressed: () async{
-                                  final isCanceled = await cancelReservation(widget.booking.id.toString(), widget.booking.facilityId.toString());
-                                  if(isCanceled){
+                                onPressed: () async {
+                                  final isCanceled = await cancelReservation(
+                                      widget.booking.id.toString(),
+                                      widget.booking.facilityId.toString());
+                                  if (isCanceled) {
                                     print('done successfully');
                                   }
-                                  await Provider.of<Bookings>(context,listen: false).fetchMyBookings();
+                                  await Provider.of<Bookings>(
+                                      context, listen: false).fetchMyBookings();
                                 },
                                 child: Text('Cancel reservation'),
                                 style: ElevatedButton.styleFrom(

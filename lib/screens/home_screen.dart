@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rhrs_app/providers/facilities.dart';
 import 'package:rhrs_app/screens/search_screen.dart';
 import 'package:rhrs_app/widgets/facility_item2.dart';
+import '../constants.dart';
 import '../widgets/travel_card.dart';
 import 'package:rhrs_app/models/facility.dart';
 
@@ -45,7 +48,9 @@ class _HomeScreenState extends State<HomeScreen> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           Text(
             "Pick your destination",
             style: TextStyle(
@@ -68,8 +73,13 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: Row(
                 children: [
-                  Icon(Icons.search,color: Colors.black,),
-                  SizedBox(width: 10,),
+                  Icon(
+                    Icons.search,
+                    color: Colors.black,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
                   Text(
                     'search for Hostels, Resorts...',
                     style: TextStyle(color: Colors.black),
@@ -105,87 +115,165 @@ class _HomeScreenState extends State<HomeScreen> {
           DefaultTabController(
             length: 3,
             child: Expanded(
-              child: Column(
-                children: [
-                  TabBar(
-                    indicatorColor: Theme.of(context).primaryColor,//Color(0xFFFE8C68),
-                    unselectedLabelColor: Color(0xFF555555),
-                    labelColor: Theme.of(context).primaryColor,//Color(0xFFFE8C68),
-                    labelPadding: EdgeInsets.symmetric(horizontal: 8.0),
-                    tabs: [
-                      Tab(
-                        text: "Resorts",
-                      ),
-                      Tab(
-                        text: "Hostels",
-                      ),
-                      Tab(
-                        text: "Chalets",
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Container(
-                    height: 300.0,
-                    child: TabBarView(
-                      children: [
-                        //Now let's create our first tab page
-                        Container(
-                          child: ListView(
-                            /*scrollDirection: Axis.horizontal,
-                            children: [
-                              FacilityItem2(Facility(
-                                id: '1',
-                                name: 'anas',
-                                type: 'Resort',
-                                cost: 40,
-                                facilityImages: [],
-                                location: 'Damascus',
-                                rate: 5
-                              )),
-                              FacilityItem2(Facility(
-                                  id: '1',
-                                  name: 'anas',
-                                  type: 'Resort',
-                                  cost: 40,
-                                  facilityImages: [],
-                                  location: 'Damascus',
-                                  rate: 5
-                              )),
-                            ],*/
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              //Now let's add and test our first card
-                              travelCard(
-                                  urls[0], "Luxary Hotel", "Caroline", 3),
-                              travelCard(urls[5], "Plaza Hotel", "Italy", 4),
-                              travelCard(urls[2], "Safari Hotel", "Africa", 5),
-                            ],
-                          ),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    TabBar(
+                      indicatorColor: Theme.of(context).primaryColor,
+                      //Color(0xFFFE8C68),
+                      unselectedLabelColor: Color(0xFF555555),
+                      labelColor: Theme.of(context).primaryColor,
+                      //Color(0xFFFE8C68),
+                      labelPadding: EdgeInsets.symmetric(horizontal: 8.0),
+                      tabs: [
+                        Tab(
+                          text: "Resorts",
                         ),
-                        Container(
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              //Here you can add what ever you want
-                              travelCard(urls[6], "Visit Rome", "Italy", 4),
-                              travelCard(
-                                  urls[8], "Visit Sidi bou Said", "Tunsia", 4),
-                            ],
-                          ),
+                        Tab(
+                          text: "Hostels",
                         ),
-                        Container(
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: [],
-                          ),
+                        Tab(
+                          text: "Chalets",
                         ),
                       ],
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Container(
+                      height: 300.0,
+                      child: TabBarView(
+                        children: [
+                          //Now let's create our first tab page
+                          Container(
+                            child: FutureBuilder(
+                                future: Provider.of<Facilities>(context,
+                                        listen: false)
+                                    .fetchTop5('farmer'),
+                                builder: ((ctx, resultSnapShot) =>
+                                    resultSnapShot.connectionState ==
+                                            ConnectionState.waiting
+                                        ? Center(
+                                            child: CircularProgressIndicator())
+                                        : Consumer<Facilities>(
+                                            builder: (ctx, fetchedFacilities,
+                                                    child) =>
+                                                ListView.builder(
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return travelCard(
+                                                      /*localApi +*/
+                                                      fetchedFacilities
+                                                          .top5Resort[index]
+                                                          .facilityImages[0]
+                                                          .photoPath,
+                                                      fetchedFacilities
+                                                          .top5Resort[index]
+                                                          .name,
+                                                      fetchedFacilities
+                                                          .top5Resort[index]
+                                                          .location,
+                                                      fetchedFacilities
+                                                          .top5Resort[index]
+                                                          .rate,
+                                                      fetchedFacilities
+                                                          .top5Resort[index]
+                                                          .id,
+                                                      context
+                                                    );
+                                                  },
+                                                  itemCount: fetchedFacilities
+                                                      .top5Resort.length,
+                                                )))),
+                          ),
+                          Container(
+                            child: FutureBuilder(
+                              future: Provider.of<Facilities>(context,
+                                      listen: false)
+                                  .fetchTop5('hostel'),
+                              builder: ((ctx, resultSnapShot) => resultSnapShot
+                                          .connectionState ==
+                                      ConnectionState.waiting
+                                  ? Center(child: CircularProgressIndicator())
+                                  : Consumer<Facilities>(
+                                      builder:
+                                          (ctx, fetchedFacilities, child) =>
+                                              ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: (context, index) {
+                                          return travelCard(
+                                            /*localApi +*/
+                                            fetchedFacilities.top5Hostels[index]
+                                                .facilityImages[0].photoPath,
+                                            fetchedFacilities
+                                                .top5Hostels[index].name,
+                                            fetchedFacilities
+                                                .top5Hostels[index].location,
+                                            fetchedFacilities
+                                                .top5Hostels[index].rate,
+                                            fetchedFacilities
+                                                .top5Hostels[index].id,
+                                            context
+                                          );
+                                        },
+                                        itemCount: fetchedFacilities
+                                            .top5Hostels.length,
+                                      ),
+                                    )),
+                            ),
+                            /*ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: [
+                                //Here you can add what ever you want
+                                travelCard(urls[6], "Visit Rome", "Italy", 4),
+                                travelCard(urls[8], "Visit Sidi bou Said",
+                                    "Tunsia", 4),
+                              ],
+                            ),*/
+                          ),
+                          Container(
+                            child: FutureBuilder(
+                              future: Provider.of<Facilities>(context,
+                                      listen: false)
+                                  .fetchTop5('chalet'),
+                              builder: ((ctx, resultSnapShot) => resultSnapShot
+                                          .connectionState ==
+                                      ConnectionState.waiting
+                                  ? Center(child: CircularProgressIndicator())
+                                  : Consumer<Facilities>(
+                                      builder:
+                                          (ctx, fetchedFacilities, child) =>
+                                              ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: (context, index) {
+                                          return travelCard(
+                                            /*localApi +*/
+                                            fetchedFacilities.top5Chalet[index]
+                                                .facilityImages[0].photoPath,
+                                            fetchedFacilities
+                                                .top5Chalet[index].name,
+                                            fetchedFacilities
+                                                .top5Chalet[index].location,
+                                            fetchedFacilities
+                                                .top5Chalet[index].rate,
+                                            fetchedFacilities
+                                                .top5Chalet[index].id,
+                                            context
+                                          );
+                                        },
+                                        itemCount:
+                                            fetchedFacilities.top5Chalet.length,
+                                      ),
+                                    )),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           )

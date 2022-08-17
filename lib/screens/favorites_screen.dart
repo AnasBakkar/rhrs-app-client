@@ -11,19 +11,28 @@ class FavoritesScreen extends StatelessWidget {
     color: kPrimaryColor,
     size: 50.0,
   );
+
   @override
   Widget build(BuildContext context) {
     final savedFacilities = Provider.of<Facilities>(context, listen: false);
     return FutureBuilder(
-        future: Provider.of<Facilities>(context, listen: false)
-            .fetchSavedFacilities(),
-        builder: ((ctx, resultSnapShot) =>
-            resultSnapShot.connectionState == ConnectionState.waiting
-                ? Center(child: spinKit)
-                : ListView.builder(
-                    itemBuilder: (context, index) =>
-                        FacilityItem2(savedFacilities.savedFacilities[index]),
-                    itemCount: savedFacilities.savedFacilities.length,
-                  )));
+      future: Provider.of<Facilities>(context, listen: false)
+          .fetchSavedFacilities(),
+      builder: ((ctx, resultSnapShot) =>
+          resultSnapShot.connectionState == ConnectionState.waiting
+              ? Center(child: spinKit)
+              : savedFacilities.savedFacilities.length != 0
+                  ? ListView.builder(
+                      itemBuilder: (context, index) =>
+                          FacilityItem2(savedFacilities.savedFacilities[index]),
+                      itemCount: savedFacilities.savedFacilities.length,
+                    )
+                  : Center(
+                    child: Text(
+                        'You haven\'t added to favorites yet',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                  )),
+    );
   }
 }

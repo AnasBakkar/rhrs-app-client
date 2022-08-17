@@ -29,7 +29,7 @@ class SettingsListItem extends StatelessWidget {
       child: Container(
         height: kSpacingUnit.w * 5.5,
         margin: EdgeInsets.symmetric(
-          horizontal: kSpacingUnit.w * 3,
+          horizontal: kSpacingUnit.w * 1.5,
         ).copyWith(
           bottom: kSpacingUnit.w * 2,
         ),

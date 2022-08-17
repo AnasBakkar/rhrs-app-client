@@ -1,8 +1,12 @@
 //Now we will create our custom widget card
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rhrs_app/models/facility.dart';
+import 'package:rhrs_app/screens/test_details_screen.dart';
+import '../providers/facilities.dart';
 
-Widget travelCard(
-    String imgUrl, String hotelName, String location, int rating) {
+Widget travelCard(String imgUrl, String hotelName, String location, int rating,
+    String id, context) {
   return Card(
     margin: EdgeInsets.only(right: 22.0),
     clipBehavior: Clip.antiAlias,
@@ -11,14 +15,40 @@ Widget travelCard(
     ),
     elevation: 0.0,
     child: InkWell(
-      onTap: () {},
+      onTap: () async {
+        Facility fetched = await Provider.of<Facilities>(context, listen: false)
+            .getFacilityDetails(id.toString());
+        if (fetched != null) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => NewDetailsScreen(
+                        id: fetched.id,
+                        ownerId: fetched.ownerId,
+                        facilityName: fetched.name,
+                        cost: fetched.cost,
+                        rate: fetched.rate,
+                        description: fetched.description,
+                        facilityImages: fetched.facilityImages,
+                        facilityType: fetched.type,
+                        //getFacilityType(facility.facilityType),
+                        location: fetched.location,
+                        hasCoffee: fetched.hasCoffee,
+                        hasCondition: fetched.hasCondition,
+                        hasFridge: fetched.hasFridge,
+                        hasTv: fetched.hasTv,
+                        hasWifi: fetched.hasWifi,
+                      )));
+        }
+      },
       child: Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-              image: NetworkImage(imgUrl),
-              fit: BoxFit.cover,
-              scale: 2.0,
-            )),
+          image: AssetImage('assets/images/facility.jpg'),
+          //NetworkImage(imgUrl),
+          fit: BoxFit.cover,
+          scale: 2.0,
+        )),
         width: 200.0,
         child: Padding(
           padding: EdgeInsets.all(12.0),

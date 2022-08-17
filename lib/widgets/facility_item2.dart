@@ -51,6 +51,7 @@ class FacilityItem2 extends StatelessWidget {
                     ),*/
                   NewDetailsScreen(
                     id: facility.id,
+                    ownerId: facility.ownerId,
                     facilityName: facility.name,
                     cost: facility.cost,
                     rate: facility.rate,

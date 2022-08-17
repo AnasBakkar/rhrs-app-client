@@ -26,7 +26,7 @@ class _NavyBarState extends State<NavyBar> {
       {'page': HomeScreen()/*SearchScreen()*/, 'title': 'Search'},
       {'page': FavoritesScreen(), 'title': 'Favorites'},
       {'page' : BookingsScreen(),'title': 'Bookings'},
-      {'page': ChatsScreen(), 'title': 'Chats'},
+      {'page': ChatScreen(), 'title': 'Chats'},
       {'page': SettingsScreen(), 'title': 'Settings'},
     ];
   }

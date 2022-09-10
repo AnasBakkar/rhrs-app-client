@@ -3,11 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:rhrs_app/models/auth.dart';
 import 'package:rhrs_app/models/profile.dart';
+import 'package:rhrs_app/screens/configuration_screen.dart';
 import 'package:rhrs_app/screens/profile_screen.dart';
 import 'package:rhrs_app/widgets/settings_list_item.dart';
 import 'package:provider/provider.dart';
 import 'notification_list.dart';
 import '../constants.dart';
+import 'package:rhrs_app/translations/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 final kTitleTextStyle = TextStyle(
   fontSize: ScreenUtil().setSp(kSpacingUnit.w * 1.7),
@@ -21,7 +24,7 @@ class SettingsScreen extends StatelessWidget {
     showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-              title: Text('Log Out'),
+              title: Text(LocaleKeys.logOut.tr()),
               content: Text(error),
               actions: [
                 FlatButton(
@@ -140,94 +143,36 @@ class SettingsScreen extends StatelessWidget {
       body: Column(
         children: <Widget>[
           SizedBox(height: 20),
-         /* FutureBuilder(
-            future: profile.fetchProfileInfo(),
-            builder: ((ctx, resultSnapShot) => resultSnapShot.connectionState ==
-                    ConnectionState.waiting
-                ? Padding(
-                  padding: const EdgeInsets.all(14.0),
-                  child: Center(child: CircularProgressIndicator()),
-                )
-                : Consumer<Profile>(
-                    builder: (ctx, prof, _) => Column(
-                          children: <Widget>[
-                            Container(
-                              height: kSpacingUnit.w * 10,
-                              width: kSpacingUnit.w * 10,
-                              margin: EdgeInsets.only(top: kSpacingUnit.w * 2),
-                              child: Stack(
-                                children: <Widget>[
-                                  CircleAvatar(
-                                    radius: kSpacingUnit.w * 5,
-                                    backgroundImage: prof.myProfile.profilePhoto !=
-                                            null
-                                        ? NetworkImage(
-                                            onlineApi + prof.myProfile.profilePhoto)
-                                        : AssetImage(
-                                            'assets/images/bp_avatar.png'),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.bottomRight,
-                                    child: Container(
-                                      height: kSpacingUnit.w * 2.5,
-                                      width: kSpacingUnit.w * 2.5,
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context).accentColor,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Center(
-                                        heightFactor: kSpacingUnit.w * 1.5,
-                                        widthFactor: kSpacingUnit.w * 1.5,
-                                        child: Icon(
-                                          LineAwesomeIcons.pen,
-                                          color: kPrimaryColor,
-                                          size: ScreenUtil()
-                                              .setSp(kSpacingUnit.w * 1.5),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: kSpacingUnit.w * 2),
-                            Text(
-                              '${prof.myProfile.userName}',
-                              style: kTitleTextStyle,
-                            ),
-                            SizedBox(height: kSpacingUnit.w * 0.5),
-                            Text(
-                              '${profile.myProfile.email}',
-                              style: kTitleTextStyle,
-                            ),
-                            SizedBox(height: kSpacingUnit.w * 3),
-                          ],
-                        ))),
-          ),*/
           Expanded(
             child: ListView(
               children: <Widget>[
                 SettingsListItem(
                   icon: LineAwesomeIcons.user,
-                  text: 'Profile',
+                  text: LocaleKeys.profile.tr(),
                   onPress: (){
                     Navigator.pushNamed(context, ProfileScreen.routeName);
                   },
                 ),
                 SettingsListItem(
                   icon: Icons.notifications_none,
-                  text: 'Notifications',
+                  text: LocaleKeys.notifications.tr(),
                   onPress: (){
                     Navigator.pushNamed(context, NotificationsList.routeName);
                   },
                 ),
                 SettingsListItem(
                   icon: LineAwesomeIcons.question_circle,
-                  text: 'Help & Support',
+                  text: LocaleKeys.help.tr(),
+                  /*onPress: (){
+                    Navigator.pushNamed(context, AuthenticationScreen.routeName);
+                  },*/
                 ),
                 SettingsListItem(
                   icon: LineAwesomeIcons.cog,
-                  text: 'Settings',
+                  text: LocaleKeys.settingsScreen.tr(),
+                  onPress: (){
+                    Navigator.pushNamed(context, ConfigurationScreen.routeName);
+                  },
                 ),
                 /*SettingsListItem(
                   icon: LineAwesomeIcons.user_plus,
@@ -235,10 +180,10 @@ class SettingsScreen extends StatelessWidget {
                 ),*/
                 SettingsListItem(
                   icon: LineAwesomeIcons.alternate_sign_out,
-                  text: 'Logout',
+                  text: LocaleKeys.logOut.tr(),
                   hasNavigation: false,
                   onPress: () {
-                    _showErrorDialog("are you sure about this?", context);
+                    _showErrorDialog(LocaleKeys.youSure.tr(), context);
                   },
                 ),
               ],

@@ -4,9 +4,9 @@ import 'package:rhrs_app/screens/bookings_screen.dart';
 import 'package:rhrs_app/screens/chats_screen.dart';
 import 'package:rhrs_app/screens/favorites_screen.dart';
 import 'package:rhrs_app/screens/settings_screen.dart';
-import 'package:rhrs_app/screens/search_screen.dart';
-import 'package:rhrs_app/screens/settings_screen.dart';
 import 'home_screen.dart';
+import 'package:rhrs_app/translations/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class NavyBar extends StatefulWidget {
   static const routeName = '/NavyBar';
@@ -23,11 +23,11 @@ class _NavyBarState extends State<NavyBar> {
   void initState() {
     super.initState();
     _pages = [
-      {'page': HomeScreen()/*SearchScreen()*/, 'title': 'Search'},
-      {'page': FavoritesScreen(), 'title': 'Favorites'},
-      {'page' : BookingsScreen(),'title': 'Bookings'},
-      {'page': ChatScreen(), 'title': 'Chats'},
-      {'page': SettingsScreen(), 'title': 'Settings'},
+      {'page': HomeScreen()/*SearchScreen()*/, 'title': LocaleKeys.homeScreen.tr()},
+      {'page': FavoritesScreen(), 'title': LocaleKeys.favoritesScreen.tr()},
+      {'page' : BookingsScreen(),'title': LocaleKeys.bookingsScreen.tr()},
+      {'page': ChatScreen(), 'title': LocaleKeys.chatsScreen.tr()},
+      {'page': SettingsScreen(), 'title': LocaleKeys.settingsScreen.tr()},
     ];
   }
 
@@ -49,7 +49,7 @@ class _NavyBarState extends State<NavyBar> {
           BottomNavyBarItem(
             icon: Icon(Icons.home),
             title: Text(
-              'Home',
+              LocaleKeys.homeScreen.tr(),
               style: Theme.of(context).textTheme.headline6,
             ),
             activeColor: Theme.of(context).primaryColor,
@@ -58,26 +58,26 @@ class _NavyBarState extends State<NavyBar> {
           BottomNavyBarItem(
             icon: Icon(Icons.favorite),
             title:
-                Text('Favorites', style: Theme.of(context).textTheme.headline6),
+                Text(LocaleKeys.favoritesScreen.tr(), style: Theme.of(context).textTheme.headline6),
             activeColor: Theme.of(context).primaryColor,
             textAlign: TextAlign.center,
           ),
           BottomNavyBarItem(
             icon: Icon(Icons.save),
-            title: Text('Bookings', style: Theme.of(context).textTheme.headline6),
+            title: Text(LocaleKeys.bookingsScreen.tr(), style: Theme.of(context).textTheme.headline6),
             activeColor: Theme.of(context).primaryColor,
             textAlign: TextAlign.center,
           ),
           BottomNavyBarItem(
             icon: Icon(Icons.chat),
-            title: Text('Chats', style: Theme.of(context).textTheme.headline6),
+            title: Text(LocaleKeys.chatsScreen.tr(), style: Theme.of(context).textTheme.headline6),
             activeColor: Theme.of(context).primaryColor,
             textAlign: TextAlign.center,
           ),
           BottomNavyBarItem(
             icon: Icon(Icons.settings),
             title:
-                Text('Settings', style: Theme.of(context).textTheme.headline6),
+                Text(LocaleKeys.settingsScreen.tr(), style: Theme.of(context).textTheme.headline6),
             activeColor: Theme.of(context).primaryColor,
             textAlign: TextAlign.center,
           ),

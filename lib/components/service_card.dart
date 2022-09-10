@@ -24,38 +24,28 @@ class ServiceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: /*[
-      RawMaterialButton(
-          elevation: 0,
-          fillColor: disabled ? kDisabledButtonColor : color,
-          constraints: BoxConstraints(minHeight: size, minWidth: size),
-          onPressed: disabled ? null : onPressed,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(radius)),
-          child: SvgPicture.asset(iconUrl)),
-      SIZED_BOX_H06,
-      Text(name,
-          style: Theme.of(context)
-              .textTheme
-              .subtitle1
-              .copyWith(color: kPrimaryColor, fontSize: fontSize))
-    ]*/
-        [
+    return Column(
+      children: [
         Container(
-            decoration: BoxDecoration(
-                color: color,
-                borderRadius: BorderRadius.circular(radius)),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SvgPicture.asset(iconUrl,width: size,height: size,color: Theme.of(context).primaryColor,),
-            )),
+          decoration: BoxDecoration(
+              color: color, borderRadius: BorderRadius.circular(radius)),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SvgPicture.asset(
+              iconUrl,
+              width: size,
+              height: size,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+        ),
         SIZED_BOX_H06,
         Text(name,
-            style: Theme.of(context)
-                .textTheme
-                .subtitle1
-                .copyWith(color: kPrimaryColor, fontSize: fontSize,fontWeight: FontWeight.bold))
+            style: Theme.of(context).textTheme.subtitle1.copyWith(
+                color: kPrimaryColor,
+                fontSize: fontSize,
+                fontWeight: FontWeight.bold))
       ],
-        );
+    );
   }
 }

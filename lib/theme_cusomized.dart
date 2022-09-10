@@ -23,6 +23,7 @@ final TextStyle chatSenderName = TextStyle(
 
 final themeCustomed = ThemeData(
     //accentColor: Colors.blueAccent,
+    fontFamily: 'Raleway',
     primaryColor: kPrimaryColor,
     backgroundColor: kBackgroundLightColor,
     scaffoldBackgroundColor: kBackgroundColor,

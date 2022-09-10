@@ -5,6 +5,8 @@ import '../constants.dart';
 import '../widgets/custom_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:rhrs_app/translations/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SearchScreen extends StatefulWidget {
   static const routeName = '/searchScreen';
@@ -48,12 +50,12 @@ class _SearchScreenState extends State<SearchScreen> {
       onChanged: (newVal) {
         setState(() {
           propertyType = newVal;
-          if (title == 'Resort')
+          if (title == 'Resort' || title == 'مزرعة')
             isResort = propertyType;
-          else if (title == 'Hostel')
-            isHostel = propertyType;
-          else
+          else if (title == 'Chalet' || title == 'شاليه')
             isChalet = propertyType;
+          else
+            isHostel = propertyType;
         });
       },
       activeColor: Colors.black,
@@ -68,12 +70,12 @@ class _SearchScreenState extends State<SearchScreen> {
     showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-              title: Text('An error occured'),
+              title: Text(LocaleKeys.error.tr()),
               content: Text(error),
               actions: [
                 FlatButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: Text('Okay'))
+                    child: Text(LocaleKeys.ok.tr()))
               ],
             ));
   }
@@ -84,9 +86,9 @@ class _SearchScreenState extends State<SearchScreen> {
               return Theme(
                 data: Theme.of(context).copyWith(
                   colorScheme: ColorScheme.light(
-                    primary: kPrimaryColor, // <-- SEE HERE
-                    onPrimary: Colors.white, // <-- SEE HERE
-                    onSurface: Colors.blueAccent, // <-- SEE HERE
+                    primary: kPrimaryColor,
+                    onPrimary: Colors.white,
+                    onSurface: Colors.blueAccent,
                   ),
                 ),
                 child: child,
@@ -129,7 +131,7 @@ class _SearchScreenState extends State<SearchScreen> {
         if (!pickedDate.isBefore(_reservationStartDate))
           _reservationEndDate = pickedDate;
         else
-          _showErrorDialog('can\'t choose the end date before the start date');
+          _showErrorDialog(LocaleKeys.endDateBeforeStartError.tr());
       });
     });
   }
@@ -138,7 +140,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Search'),
+        title: Text(LocaleKeys.search.tr()),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -162,7 +164,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           ),
                           keyboardType: TextInputType.text,
                           decoration: InputDecoration(
-                            labelText: 'Facility Location',
+                            labelText: LocaleKeys.facilityLocation.tr(),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10)),
                           ),
@@ -184,7 +186,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      'From',
+                      LocaleKeys.from.tr(),
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
@@ -192,7 +194,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       onPressed: pickStartReservationDate,
                       child: Text(
                         _reservationStartDate == null
-                            ? 'Choose Start Date'
+                            ? LocaleKeys.chooseStartDate.tr()
                             : DateFormat.yMd()
                                 .format(_reservationStartDate)
                                 .toString(),
@@ -202,7 +204,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                     ),
                     Text(
-                      'to',
+                      LocaleKeys.to.tr(),
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
@@ -210,7 +212,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       onPressed: pickEndReservationDate,
                       child: Text(
                         _reservationEndDate == null
-                            ? 'Choose End Date'
+                            ? LocaleKeys.chooseEndDate.tr()
                             : DateFormat.yMd()
                                 .format(_reservationEndDate)
                                 .toString(),
@@ -226,7 +228,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 height: 10.0,
               ),
               Text(
-                'Cost ',
+                LocaleKeys.cost.tr(),
                 style: TextStyle(
                   fontSize: 18.0,
                 ),
@@ -259,35 +261,11 @@ class _SearchScreenState extends State<SearchScreen> {
                   },
                 ),
               ),
-              /*SliderTheme(
-              data: SliderTheme.of(context).copyWith(
-                activeTrackColor: Theme.of(context).accentColor,
-                inactiveTrackColor: Color(0xFF8D8E98),
-                thumbColor: Theme.of(context).primaryColor,
-                overlayColor: Color(0x29EB1555),
-                thumbShape: RoundSliderThumbShape(
-                  enabledThumbRadius: 10.0,
-                ),
-                overlayShape: RoundSliderOverlayShape(
-                  overlayRadius: 22.0,
-                ),
-              ),
-              child: Slider(
-                value: cost.toDouble(),
-                min: 5.0,
-                max: 100.0,
-                onChanged: (double value) {
-                  setState(() {
-                    cost = value.round();
-                  });
-                },
-              ),
-            ),*/
               Row(
                 children: [
                   Expanded(
                     child: Text(
-                      'Rate',
+                      LocaleKeys.rate.tr(),
                       style: TextStyle(fontSize: 18),
                     ),
                     flex: 2,
@@ -323,35 +301,35 @@ class _SearchScreenState extends State<SearchScreen> {
               SizedBox(
                 height: 12,
               ),
-              const Text(
-                'Property Type',
+              Text(
+                LocaleKeys.propertyType.tr(),
                 style: TextStyle(
                   fontSize: 18.0,
                 ),
               ),
-              buildCheckboxListTile(
-                  'Chalet', 'Reserve a Chalet to yourself', isChalet),
-              buildCheckboxListTile(
-                  'Resort', 'Reserve a resort to yourself', isResort),
-              buildCheckboxListTile(
-                  'Hostel', 'Reserve a hostel to yourself', isHostel),
+              buildCheckboxListTile(LocaleKeys.chalet.tr(),
+                  LocaleKeys.chaletReserve.tr(), isChalet),
+              buildCheckboxListTile(LocaleKeys.resort.tr(),
+                  LocaleKeys.resortReserve.tr(), isResort),
+              buildCheckboxListTile(LocaleKeys.hostel.tr(),
+                  LocaleKeys.hostelReserve.tr(), isHostel),
               SizedBox(
                 height: 10,
               ),
               Center(
                 child: CustomButton(
-                    buttonLabel: 'Search',
-                    onPress: () {
+                    buttonLabel: LocaleKeys.search.tr(),
+                    onPress: () async {
                       if (facilityAddress == null) {
-                        _showErrorDialog(
-                            "You must enter the facility location!");
+                        _showErrorDialog(LocaleKeys.enterFacilityLocation.tr());
                       } else if (!isChalet && !isResort && !isHostel) {
-                        _showErrorDialog("You must choose a type!");
+                        _showErrorDialog(LocaleKeys.chooseType.tr());
                       } else {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (_) => FacilitiesList(
+                                      location: facilityAddress,
                                       start: _reservationStartDate
                                           .toString()
                                           .substring(0, 10),

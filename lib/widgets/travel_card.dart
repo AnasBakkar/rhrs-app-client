@@ -1,12 +1,13 @@
 //Now we will create our custom widget card
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rhrs_app/constants.dart';
 import 'package:rhrs_app/models/facility.dart';
 import 'package:rhrs_app/screens/test_details_screen.dart';
 import '../providers/facilities.dart';
 
-Widget travelCard(String imgUrl, String hotelName, String location, int rating,
-    String id, context) {
+Widget travelCard(String imgUrl, String facilityName, String location,
+    int rating, String id, context) {
   return Card(
     margin: EdgeInsets.only(right: 22.0),
     clipBehavior: Clip.antiAlias,
@@ -43,12 +44,13 @@ Widget travelCard(String imgUrl, String hotelName, String location, int rating,
       },
       child: Container(
         decoration: BoxDecoration(
-            image: DecorationImage(
-          image: AssetImage('assets/images/facility.jpg'),
-          //NetworkImage(imgUrl),
-          fit: BoxFit.cover,
-          scale: 2.0,
-        )),
+          image: DecorationImage(
+            image: //AssetImage('assets/images/facility.jpg'),
+                NetworkImage(localApi + imgUrl),
+            fit: BoxFit.cover,
+            scale: 2.0,
+          ),
+        ),
         width: 200.0,
         child: Padding(
           padding: EdgeInsets.all(12.0),
@@ -72,7 +74,7 @@ Widget travelCard(String imgUrl, String hotelName, String location, int rating,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      hotelName,
+                      facilityName,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 22.0,

@@ -18,12 +18,6 @@ class NotificationWidget extends StatelessWidget {
     else{
       return 'assets/images/Done.png';
     }
-    /*else if(notification1.notifyType == ''){
-
-    }
-    else if(notification1.notifyType == ){
-
-    }*/
   }
 
   @override

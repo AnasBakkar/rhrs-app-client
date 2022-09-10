@@ -9,49 +9,34 @@ import 'chat_room.dart';
 class AllChats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.only(top: 10),
-          child: Row(
-            children: [
-              Text(
-                'All Chats',
-                style: Theme.of(context).textTheme.headline2,
-              ),
-              Spacer(),
-              /*IconButton(onPressed: () {}, icon: Icon(Icons.search_rounded))*/
-            ],
-          ),
-        ),
-        FutureBuilder(
-            future: Provider.of<AllChat>(context).fetchAllChatList(),
-            builder: ((context, AsyncSnapshot<List<Chat>> snapshot) => snapshot
-                    .hasData
-                ? ListView.builder(
-                    itemCount: snapshot.data.length,
-                    shrinkWrap: true,
-                    physics: const ScrollPhysics(),
-                    itemBuilder: ((context, index) => Column(
-                          children: [
-                            ItemChat(
-                              avatar: snapshot.data[index].avatar,
-                              countNotRead: snapshot.data[index].countNotRead,
-                              lastMessage: snapshot.data[index].lastMessage,
-                              name: snapshot.data[index].name,
-                              time: snapshot.data[index].time,
-                              id: snapshot.data[index].id,
-                              status: snapshot.data[index].status,
-                            ),
-                            Divider(
-                              height: 3,
-                            )
-                          ],
-                        )))
-                : const Center(
-                    child: CircularProgressIndicator(),
-                  ))),
-      ],
+    return FutureBuilder(
+      future: Provider.of<AllChat>(context).fetchAllChatList(),
+      builder: ((context, AsyncSnapshot<List<Chat>> snapshot) =>
+          snapshot.hasData
+              ? ListView.builder(
+                  itemCount: snapshot.data.length,
+                  shrinkWrap: true,
+                  physics: const ScrollPhysics(),
+                  itemBuilder: ((context, index) => Column(
+                        children: [
+                          ItemChat(
+                            avatar: snapshot.data[index].avatar,
+                            countNotRead: snapshot.data[index].countNotRead,
+                            lastMessage: snapshot.data[index].lastMessage,
+                            name: snapshot.data[index].name,
+                            time: snapshot.data[index].time,
+                            id: snapshot.data[index].id,
+                            status: snapshot.data[index].status,
+                          ),
+                          Divider(
+                            height: 3,
+                          )
+                        ],
+                      )),
+                )
+              : const Center(
+                  child: CircularProgressIndicator(),
+                )),
     );
   }
 }
@@ -113,8 +98,8 @@ class ItemChat extends StatelessWidget {
                     child: Text(
                       name,
                       style: Theme.of(context).textTheme.headline2.copyWith(
-                        fontSize: 16,
-                      ),
+                            fontSize: 16,
+                          ),
                       softWrap: false,
                     ),
                   ),
@@ -135,7 +120,7 @@ class ItemChat extends StatelessWidget {
               children: [
                 countNotRead == 0
                     ? Icon(
-                        Icons.done_all,
+                        Icons.done,
                         color: Theme.of(context).textTheme.bodyText1.color,
                       )
                     : CircleAvatar(
@@ -156,11 +141,9 @@ class ItemChat extends StatelessWidget {
 //                    ? Container()
 //                    :
                 Container(
-                  width: wd / 8,
+                  width: wd / 6,
                   child: Text(
                     "${TimeAgo.timeAgoSinceDate(time)}",
-                    // TimeAgo.timeAgoSinceDate(time.timeStamp),
-                    // time.toString(),
                     style: Theme.of(context).textTheme.bodyText1,
                     softWrap: false,
                   ),

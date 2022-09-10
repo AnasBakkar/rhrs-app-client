@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +7,8 @@ import '../models/chats_model.dart';
 import '../models/message_model.dart';
 import '../providers/pusherController.dart';
 import '../theme_cusomized.dart';
+import 'package:rhrs_app/translations/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 
 class ChatRoom extends StatefulWidget {
@@ -123,7 +124,7 @@ class _ChatRoomState extends State<ChatRoom> {
           children: [
             Center(
               child: CircleAvatar(
-                radius: 30,
+                radius: 24,
                 backgroundImage:
                 NetworkImage(localApi + '${widget.avatar}'),
               ),
@@ -140,11 +141,11 @@ class _ChatRoomState extends State<ChatRoom> {
                 ),
                 widget.statuse
                     ? Text(
-                  'online',
+                  LocaleKeys.online.tr(),
                   style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 18),
                 )
                     : Text(
-                  'offline',
+                  LocaleKeys.offline.tr(),
                   style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 18),
                 ),
               ],
@@ -230,7 +231,7 @@ class _ChatRoomState extends State<ChatRoom> {
                         },
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'Type your message ...',
+                          hintText: LocaleKeys.enterMessage.tr(),
                           hintStyle: TextStyle(color: Colors.grey[500]),
                         ),
                       ),

@@ -42,6 +42,7 @@ class Facilities extends ChangeNotifier {
   List<Facility> top5Resort = [];
   List<Facility> top5Chalet = [];
   List<Facility> top5Hostels = [];
+  List<Facility> recommendedFacilities = [];
   Facility fetchedFacility;
 
   Future<void> fetchSavedFacilities() async {
@@ -118,7 +119,8 @@ class Facilities extends ChangeNotifier {
       int minCost,
       int maxCost,
       int rate,
-      String propertyType}) async {
+      String propertyType,
+      String location}) async {
     Map<String, String> headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
@@ -131,6 +133,7 @@ class Facilities extends ChangeNotifier {
       "rate": '$rate',
       "start_date": "$startDate",
       "end_date": "$endDate",
+      "location": "$location",
     };
     final List<Facility> _loadedFacilities = [];
     final pageNumber = nextUrl.substring(27, 56);
@@ -186,7 +189,8 @@ class Facilities extends ChangeNotifier {
       int minCost,
       int maxCost,
       int rate,
-      String propertyType}) async {
+      String propertyType,
+      String location}) async {
     double min = minCost.toDouble();
     double max = maxCost.toDouble();
     print(startDate);
@@ -199,6 +203,7 @@ class Facilities extends ChangeNotifier {
       "rate": '$rate',
       "start_date": "$startDate",
       "end_date": "$endDate",
+      "location":"$location",
     };
     //DateTime
     print(queryParameters);
@@ -341,6 +346,74 @@ class Facilities extends ChangeNotifier {
     //notifyListeners();
   }
 
+  Future<void> fetchRecommended() async {
+    recommendedFacilities = [];
+    final API = localApi + 'api/user/proposals';
+    var url = Uri.parse(API);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    print(prefs.get('token'));
+    final extractedData =
+    json.decode(prefs.getString('userData')) as Map<String, dynamic>;
+    String token = extractedData['token'];
+    print('user id');
+    print(extractedData['userId']);
+    print(token);
+    Map<String, String> headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer" + " " + token
+    };
+    try {
+      final response = await http.get(url, headers: headers);
+      final extractedData = json.decode(response.body);
+      print(extractedData);
+      final data = (extractedData as List)
+          .map((data) => Facility(
+        id: data['id'].toString(),
+        name: data['name'],
+        type: data['type'],
+        description: data['description'],
+        rate: data['rate'],
+        cost: data['cost'],
+        location: data['location'],
+        hasCoffee: true,
+        //data['coffee_machine'] == 0 ? false : true,
+        hasCondition: true,
+        //data['air_condition'] == 0 ? false : true,
+        hasFridge: true,
+        //data['fridge'] == 0 ? false : true,
+        hasWifi: data['wifi'] == 0 ? false : true,
+        hasTv: true,
+        //data['tv'] == 0 ? false : true,
+        facilityImages: List.from(data['photos']).length > 0
+            ? (data['photos'] as List)
+            .map((photo) => FacilityPhoto(
+            photoId: photo['id'],
+            facilityId: photo['id_facility'],
+            photoPath: photo[
+            'path_photo'] /* != null
+                                  ? photo['path_photo']
+                                  : 'https://trekbaron.com/wp-content/uploads/2020/07/types-of-resorts-July282020-1-min.jpg',*/
+        ))
+            .toList()
+            : [
+          FacilityPhoto(
+            photoId: 1,
+            photoPath:
+            'https://prod-palace-brand.s3.amazonaws.com/medium_playa_del_carmen_resort_7769c7222e.jpg',
+          )
+        ],
+      ))
+          .toList();
+      print(data);
+      recommendedFacilities.addAll(data);
+    } catch (e) {
+      print("recommended " + e.toString());
+    }
+    //print('length ${top5Facilities.length}');
+    //notifyListeners();
+  }
+
   Future<List<String>> getUnavailableDates(String facilityId) async {
     List<String> dates = [];
     List<List<String>> allDates = [];
@@ -448,12 +521,13 @@ class Facilities extends ChangeNotifier {
                 )
               ],
       );
+      print('dfdghdfg');
       fetchedFacility = data;
       print(fetchedFacility);
       return fetchedFacility;
       print(fetchedFacility);
     } catch (e) {
-      print(e.toString());
+      print('fetched   ${e.toString()}');
     }
   }
 

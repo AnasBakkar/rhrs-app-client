@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:rhrs_app/screens/Authentication_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants.dart';
 
@@ -165,7 +166,7 @@ class Auth with ChangeNotifier {
         final sharedPrefernces = await SharedPreferences.getInstance();
         sharedPrefernces.clear();
         Navigator.of(context)
-            .pushNamedAndRemoveUntil(Auth.routeName, (route) => false);
+            .pushNamedAndRemoveUntil(AuthenticationScreen.routeName, (route) => false);
       }
     } catch (error) {
       print(error);

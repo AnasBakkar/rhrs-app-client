@@ -30,10 +30,6 @@ class TopBar extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-          /*IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.menu, color: Colors.white),
-          ),*/
         ],
       ),
     );

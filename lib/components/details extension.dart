@@ -37,11 +37,8 @@ class DetailExtension extends StatelessWidget {
       this.hasFridge,
       this.hasTv});
 
-  static const _BOOKMARK_ICON = 'assets/icons/home_screen/bp_bookmark_icon.svg';
   static const _LOCATION_ICON = 'assets/icons/home_screen/bp_location_icon.svg';
   static const _STAR_ICON = 'assets/icons/home_screen/bp_star_icon.svg';
-
-  //final List<ServiceTag> _listAmenitiesTags = ExampleData().getAmenitiesTags();
 
   @override
   Widget build(BuildContext context) {
@@ -74,24 +71,22 @@ class DetailExtension extends StatelessWidget {
                 Text(facilityType, style: _dtlTypeTextStyle),
                 Spacer(),
                 Consumer<Facility>(
-                    builder: (ctx, fac, _) => IconButton(
-                        icon: Icon(fac.isFavorite
-                            ? Icons.bookmark
-                            : Icons.bookmark_border,color:Theme.of(context).primaryColor),
-                        onPressed: () async {
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          final extractedData =
-                              json.decode(prefs.getString('userData'))
-                                  as Map<String, dynamic>;
-                          String token = extractedData['token'];
-                          await fac.toggleFavoriteStatus(token,id);
-                        })),
-                /*SvgPicture.asset(
-                  _BOOKMARK_ICON,
-                  height: 20,
-                  color: kPrimaryColor,
-                )*/
+                  builder: (ctx, fac, _) => IconButton(
+                      icon: Icon(
+                          fac.isFavorite
+                              ? Icons.bookmark
+                              : Icons.bookmark_border,
+                          color: Theme.of(context).primaryColor),
+                      onPressed: () async {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        final extractedData =
+                            json.decode(prefs.getString('userData'))
+                                as Map<String, dynamic>;
+                        String token = extractedData['token'];
+                        await fac.toggleFavoriteStatus(token, id);
+                      }),
+                ),
               ],
             ),
           ),
@@ -106,27 +101,10 @@ class DetailExtension extends StatelessWidget {
                 '$location',
                 style: _dtlSub1TextStyle,
               ),
-              /*RichText(
-                  text: TextSpan(children: [
-                    TextSpan(
-                        text: '4', style: _dtlSub1TextStyle),
-                    TextSpan(text: ' km', style: _dtlBody1TextStyle)
-                  ]),
-              ),*/
               SIZED_BOX_W20,
               for (int i = 0; i < rate; i++)
                 SvgPicture.asset(_STAR_ICON, height: 20),
               SIZED_BOX_W06,
-              /*RichText(
-                  text: TextSpan(children: [
-                    TextSpan(
-                        text: rate.toString(), style: _dtlSub1TextStyle),
-                    /*TextSpan(
-                        text:
-                        ' (${NumberFormat("#,###").format(hotel.reviewers)} Reviews)',
-                        style: _dtlBody1TextStyle)*/
-                  ]),
-              ),*/
             ],
           ),
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -209,21 +187,6 @@ class DetailExtension extends StatelessWidget {
                       width: 1,
                     ),
             ]),
-            /*Padding(
-              padding: const EdgeInsets.only(top: 12),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: _listAmenitiesTags
-                      .map((tag) => ButtonServiceTag(
-                    name: tag.name,
-                    iconUrl: tag.iconUrl,
-                    color: kBackgroundLightColor,
-                    radius: 8,
-                    size: 42,
-                    fontSize: 12,
-                  ))
-                      .toList()),
-            ),*/
           ])
         ],
       ),

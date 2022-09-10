@@ -3,7 +3,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:rhrs_app/providers/facilities.dart';
 import 'package:rhrs_app/widgets/facility_item2.dart';
-
+import 'package:rhrs_app/translations/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../constants.dart';
 
 class FavoritesScreen extends StatelessWidget {
@@ -20,7 +21,7 @@ class FavoritesScreen extends StatelessWidget {
           .fetchSavedFacilities(),
       builder: ((ctx, resultSnapShot) =>
           resultSnapShot.connectionState == ConnectionState.waiting
-              ? Center(child: spinKit)
+              ? Center(child: CircularProgressIndicator()/*spinKit*/)
               : savedFacilities.savedFacilities.length != 0
                   ? ListView.builder(
                       itemBuilder: (context, index) =>
@@ -29,7 +30,7 @@ class FavoritesScreen extends StatelessWidget {
                     )
                   : Center(
                     child: Text(
-                        'You haven\'t added to favorites yet',
+                        LocaleKeys.noFavorites.tr(),
                         style: TextStyle(fontSize: 16),
                       ),
                   )),

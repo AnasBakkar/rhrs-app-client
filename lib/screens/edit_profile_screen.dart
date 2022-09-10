@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:rhrs_app/models/profile.dart';
 import 'package:rhrs_app/widgets/custom_button.dart';
 import 'package:rhrs_app/constants.dart';
+import 'package:rhrs_app/translations/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class EditProfile extends StatefulWidget {
   static const routeName = '/edit_profile';
@@ -22,7 +24,7 @@ class _EditProfileState extends State<EditProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Profile Info'),
+        title: Text(LocaleKeys.editProfileInfo.tr()),
         elevation: 0.0,
       ),
       body: Container(
@@ -37,7 +39,7 @@ class _EditProfileState extends State<EditProfile> {
                     textInputAction: TextInputAction.next,
                     autofocus: true,
                     decoration:
-                        InputDecoration(border: inputBorder, labelText: 'Name'),
+                        InputDecoration(border: inputBorder, labelText: LocaleKeys.name.tr()),
                     onSaved: (value) {
                       name = value;
                     },
@@ -47,7 +49,7 @@ class _EditProfileState extends State<EditProfile> {
                       textInputAction: TextInputAction.next,
                       autofocus: true,
                       decoration: InputDecoration(
-                          border: inputBorder, labelText: 'E-mail'),
+                          border: inputBorder, labelText: LocaleKeys.email.tr()),
                       onSaved: (value) {
                         email = value;
                       }),
@@ -57,7 +59,7 @@ class _EditProfileState extends State<EditProfile> {
                       autofocus: true,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
-                          border: inputBorder, labelText: 'Phone'),
+                          border: inputBorder, labelText: LocaleKeys.phone.tr()),
                       onSaved: (value) {
                         phone = value;
                       }),
@@ -66,7 +68,7 @@ class _EditProfileState extends State<EditProfile> {
                       textInputAction: TextInputAction.next,
                       autofocus: true,
                       decoration: InputDecoration(
-                          border: inputBorder, labelText: 'Gender'),
+                          border: inputBorder, labelText: LocaleKeys.gender.tr()),
                       onSaved: (value) {
                         gender = value;
                       }),
@@ -75,7 +77,7 @@ class _EditProfileState extends State<EditProfile> {
                       autofocus: true,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
-                          border: inputBorder, labelText: 'Age'),
+                          border: inputBorder, labelText: LocaleKeys.age.tr()),
                       onSaved: (value) {
                         age = value;
                       }),
@@ -83,7 +85,7 @@ class _EditProfileState extends State<EditProfile> {
                     height: 16,
                   ),
                   CustomButton(
-                    buttonLabel: 'Submit',
+                    buttonLabel: LocaleKeys.submit.tr(),
                     onPress: () async{
                       _formKey.currentState.save();
                       print("name");

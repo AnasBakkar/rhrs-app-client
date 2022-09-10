@@ -26,12 +26,6 @@ class StackContainer extends StatelessWidget {
             child: Container(
               height: 300.0,
               color: Theme.of(context).primaryColor,
-              /*decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage("https://picsum.photos/200"),
-                  fit: BoxFit.cover,
-                ),
-              ),*/
             ),
           ),
           Align(
@@ -40,11 +34,8 @@ class StackContainer extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 CircleAvatar(
-                  backgroundImage : /*NetworkImage(onlineApi + userImage) != null ? NetworkImage(onlineApi + userImage) :*/ NetworkImage('https://i.pravatar.cc/300'),//NetworkImage('https://i.pravatar.cc/300'),
+                  backgroundImage : NetworkImage(localApi + userImage),//: NetworkImage('https://i.pravatar.cc/300'),//NetworkImage('https://i.pravatar.cc/300'),
                   radius: 60.0,
-                  /*"https://i.pravatar.cc/300",
-                  borderWidth: 4.0,
-                  radius: 60.0,*/
                 ),
                 SizedBox(height: 10.0),
                 Text(
@@ -54,13 +45,6 @@ class StackContainer extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                /*Text(
-                  "Developer",
-                  style: TextStyle(
-                    fontSize: 12.0,
-                    color: Colors.grey[700],
-                  ),
-                ),*/
               ],
             ),
           ),

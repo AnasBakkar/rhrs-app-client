@@ -1,7 +1,6 @@
 import 'package:intl/intl.dart';
 
 class TimeAgo {
-
   static bool isSameDay(dataString) {
     DateTime sdate = DateTime.parse(dataString);
     int stimestamp = sdate.microsecondsSinceEpoch;
@@ -16,12 +15,9 @@ class TimeAgo {
 
   static String timeAgoSinceDate(String dateString,
       {bool numericDates = true}) {
-    // print(dateString);
     DateTime sdate = DateTime.parse(dateString);
     int stimestamp = sdate.microsecondsSinceEpoch;
     DateTime notificationDate = DateTime.fromMicrosecondsSinceEpoch(stimestamp);
-    // print(notificationDate);
-    // DateTime notificationDate = DateFormat("dd-MM-yyyy h:mma").parse(dateString);
     final date2 = DateTime.now();
     final difference = date2.difference(notificationDate);
 

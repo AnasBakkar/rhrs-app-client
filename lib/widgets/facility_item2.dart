@@ -40,32 +40,24 @@ class FacilityItem2 extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (_) =>
-                  /*DetailScreen(
-                      facilityName: facility.name,
-                      cost: facility.cost,
-                      rate: facility.rate,
-                      description: facility.description,
-                      facilityImages: facility.facilityImages,
-                      facilityType: facility.type,//getFacilityType(facility.facilityType),
-                    ),*/
-                  NewDetailsScreen(
-                    id: facility.id,
-                    ownerId: facility.ownerId,
-                    facilityName: facility.name,
-                    cost: facility.cost,
-                    rate: facility.rate,
-                    description: facility.description,
-                    facilityImages: facility.facilityImages,
-                    facilityType: facility.type,
-                    //getFacilityType(facility.facilityType),
-                    location: facility.location,
-                    hasCoffee: facility.hasCoffee,
-                    hasCondition: facility.hasCondition,
-                    hasFridge: facility.hasFridge,
-                    hasTv: facility.hasTv,
-                    hasWifi: facility.hasWifi,
-                  )),
+            builder: (_) =>
+                NewDetailsScreen(
+              id: facility.id,
+              ownerId: facility.ownerId,
+              facilityName: facility.name,
+              cost: facility.cost,
+              rate: facility.rate,
+              description: facility.description,
+              facilityImages: facility.facilityImages,
+              facilityType: facility.type,
+              location: facility.location,
+              hasCoffee: facility.hasCoffee,
+              hasCondition: facility.hasCondition,
+              hasFridge: facility.hasFridge,
+              hasTv: facility.hasTv,
+              hasWifi: facility.hasWifi,
+            ),
+          ),
         );
       },
       child: Card(
@@ -95,7 +87,10 @@ class FacilityItem2 extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                           child: FadeInImage(
                               placeholder: AssetImage(_LOADING_IMAGE),
-                              image: facility.facilityImages.length != 0 ? NetworkImage(/*localApi + */facility.facilityImages[0].photoPath) : AssetImage('assets/images/facility.jpg'),
+                              image: facility.facilityImages.length != 0
+                                  ? NetworkImage(localApi +
+                                      facility.facilityImages[0].photoPath)
+                                  : AssetImage('assets/images/facility.jpg'),
                               //facility.facilityImages[0],
                               width: double.infinity,
                               fit: BoxFit.cover)),
@@ -123,7 +118,7 @@ class FacilityItem2 extends StatelessWidget {
                   children: [
                     Text('${facility.type}', style: _bodBody1TextStyle),
                     Spacer(),
-                    SvgPicture.asset(_BOOKMARK_ICON)
+                    //SvgPicture.asset(_BOOKMARK_ICON)
                   ],
                 ),
               ),
@@ -145,21 +140,9 @@ class FacilityItem2 extends StatelessWidget {
                     Text(facility.location,
                         style: _bodBody1TextStyle.copyWith(
                             color: kPrimaryDarkenColor)),
-                    /*RichText(
-                        text: TextSpan(children: [
-                      TextSpan(
-                          text: '4',
-                          style: _bodBody1TextStyle.copyWith(
-                              color: kPrimaryDarkenColor)),
-                      TextSpan(text: ' km', style: _bodBody2TextStyle),
-                    ])),*/
                     SIZED_BOX_W20,
                     for (int i = 0; i < facility.rate; i++)
                       SvgPicture.asset(_STAR_ICON),
-                    /*SIZED_BOX_W06,
-                    Text('${facility.rate}',
-                        style: _bodBody1TextStyle.copyWith(
-                            color: kPrimaryDarkenColor))*/
                   ],
                 ),
               ),
